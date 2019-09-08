@@ -1,0 +1,7 @@
+0001 BIRD 2.0.4 ready.
+1000-BIRD 2.0.4
+1011-Router ID is 172.16.10.1
+ Current server time is 2019-08-15 12:42:51.638
+ Last reboot on 2019-08-15 12:42:47.592
+ Last reconfiguration on 2019-08-15 12:42:47.592
+0013 Daemon is up and running
