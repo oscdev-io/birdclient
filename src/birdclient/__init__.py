@@ -25,8 +25,10 @@ import socket
 
 from typing import Any, Dict, List, Optional
 
+__version__ = '0.0.1'
 
-class Birdc:
+
+class BirdClient:
     """BIRD client class."""
 
     # Socket file
@@ -34,7 +36,7 @@ class Birdc:
     # Ending lines for bird control channel
     _ending_lines: List[bytes]
 
-    def __init__(self, socket_file: str):
+    def __init__(self, socket_file: Optional[str] = None):
         """Initialize the object."""
 
         # Set socket file
@@ -44,13 +46,6 @@ class Birdc:
 
     def show_status(self, data: Optional[List[str]] = None) -> Dict[str, str]:
         """Return parsed BIRD status."""
-        # 0001 BIRD 2.0.4 ready.
-        # 1000-BIRD 2.0.4
-        # 1011-Router ID is 172.16.10.1
-        #  Current server time is 2019-08-15 12:42:51.638
-        #  Last reboot on 2019-08-15 12:42:47.592
-        #  Last reconfiguration on 2019-08-15 12:42:47.592
-        # 0013 Daemon is up and running
 
         # Grab status
         if not data:
@@ -92,22 +87,6 @@ class Birdc:
 
     def show_protocols(self, data: Optional[List[str]] = None) -> Dict[str, Any]:
         """Return parsed BIRD protocols."""
-        # 0001 BIRD 2.0.4 ready.
-        # 2002-Name       Proto      Table      State  Since         Info
-        # 1002-device1    Device     ---        up     13:13:28.641
-        #  kernel4    Kernel     t_kernel4  up     13:13:28.641
-        #  kernel6    Kernel     t_kernel6  up     13:13:28.641
-        #  static4    Static     t_static4  up     13:13:28.641
-        #  static6    Static     t_static6  up     13:13:28.641
-        #  p_static4_to_kernel4 Pipe       ---        up     13:13:28.641  t_static4 <=> t_kernel4
-        #  p_static6_to_kernel6 Pipe       ---        up     13:13:28.641  t_static6 <=> t_kernel6
-        #  ospf4      OSPF       t_ospf4    up     13:13:28.641  Alone
-        #  ospf6      OSPF       t_ospf6    up     13:13:28.641  Running
-        #  p_ospf4_to_kernel4 Pipe       ---        up     13:13:28.641  t_ospf4 <=> t_kernel4
-        #  p_ospf6_to_kernel6 Pipe       ---        up     13:13:28.641  t_ospf6 <=> t_kernel6
-        #  p_ospf4_to_static4 Pipe       ---        up     13:13:28.641  t_ospf4 <=> t_static4
-        #  p_ospf6_to_static6 Pipe       ---        up     13:13:28.641  t_ospf6 <=> t_static6
-        # 0000
 
         # Grab protocols
         if not data:
@@ -142,92 +121,6 @@ class Birdc:
     # pylama: ignore=R0915,C901
     def show_route_table(self, table: str, data: Optional[List[str]] = None) -> List:
         """Return parsed BIRD routing table."""
-        # 0001 BIRD 2.0.4 ready.
-        # 1007-Table t_static4:
-        #  10.0.1.0/24          unicast [static4 13:36:14.198] * (200)
-        #         via 192.168.0.4 on eth0
-        # 1008-   Type: static univ
-        # 1007-10.0.2.0/24          unicast [static4 13:36:14.198] * (200)
-        #         via 192.168.0.5 on eth0
-        # 1008-   Type: static univ
-        # 0000
-
-        # 0001 BIRD 2.0.4 ready.
-        # 1007-Table t_kernel4:
-        #  172.16.100.0/24      unicast [kernel4 13:36:14.199] (10)
-        #         via 172.16.10.10 on eth9
-        # 1008-   Type: inherit univ
-        # 1007-10.0.1.0/24          unicast [static4 13:36:14.199] * (200)
-        #         via 192.168.0.4 on eth0
-        # 1008-   Type: static univ
-        # 1007-10.0.2.0/24          unicast [static4 13:36:14.199] * (200)
-        #         via 192.168.0.5 on eth0
-        # 1008-   Type: static univ
-        # 0000
-
-        # 0001 BIRD 2.0.4 ready.
-        # 1007-Table t_ospf4:
-        #  172.16.100.0/24      unicast [kernel4 13:36:14.199] (10)
-        #         via 172.16.10.10 on eth9
-        # 1008-   Type: inherit univ
-        # 1007-10.0.1.0/24          unicast [static4 13:36:14.199] * (200)
-        #         via 192.168.0.4 on eth0
-        # 1008-   Type: static univ
-        # 1007-10.0.2.0/24          unicast [static4 13:36:14.199] * (200)
-        #         via 192.168.0.5 on eth0
-        # 1008-   Type: static univ
-        # 0000
-
-        # 0001 BIRD 2.0.4 ready.
-        # 1007-Table t_static6:
-        #  fec0:20::/64         unicast [static6 13:36:14.708] * (200)
-        #         via fec0::5 on eth0
-        # 1008-   Type: static univ
-        # 1007-fec0:10::/64         unicast [static6 13:36:14.708] * (200)
-        #         via fec0::4 on eth0
-        # 1008-   Type: static univ
-        # 0000
-
-        # 0001 BIRD 2.0.4 ready.
-        # 1007-Table t_kernel6:
-        #  fec0:20::/64         unicast [static6 13:36:14.708] * (200)
-        #         via fec0::5 on eth0
-        # 1008-   Type: static univ
-        # 1007-fec0:10::/64         unicast [static6 13:36:14.708] * (200)
-        #         via fec0::4 on eth0
-        # 1008-   Type: static univ
-        # 0000
-
-        # 0001 BIRD 2.0.4 ready.
-        # 1007-Table t_ospf6:
-        #  fec0:20::/64         unicast [static6 13:36:14.708] * (200)
-        #         via fec0::5 on eth0
-        # 1008-   Type: static univ
-        # 1007-fec0:10::/64         unicast [static6 13:36:14.708] * (200)
-        #         via fec0::4 on eth0
-        # 1008-   Type: static univ
-        # 0000
-
-        # 0001 BIRD 2.0.4 ready.
-        # 1007-Table t_ospf6:
-        #  fec0:20::/64         unicast [ospf6 14:20:00.666] E2 (150/20/10000) [172.16.10.1]
-        #         via fe80::8c84:28ff:fe6c:40ae on eth0
-        # 1008-   Type: OSPF-E2 univ
-        # 1007-fec0:10::/64         unicast [ospf6 14:20:00.666] E2 (150/20/10000) [172.16.10.1]
-        #         via fe80::8c84:28ff:fe6c:40ae on eth0
-        # 1008-   Type: OSPF-E2 univ
-        # 1007-fec0::/64            unicast [ospf6 14:19:58.660] I (150/20) [172.16.10.1]
-        #         via fe80::8c84:28ff:fe6c:40ae on eth0
-        # 1008-   Type: OSPF univ
-        # 1007-fefe::/64            unicast [ospf6 14:20:00.666] I (150/30) [172.16.10.1]
-        #         via fe80::8c84:28ff:fe6c:40ae on eth0
-        # 1008-   Type: OSPF univ
-        # 1007-fec0:1::/64          unicast [ospf6 14:19:58.660] I (150/10) [0.0.0.3]
-        #         dev eth0
-        # 1008-   Type: OSPF univ
-        # 1007-fefe:1::/64          unicast [ospf6 14:20:00.666] E2 (150/30/10000) [172.16.10.1]
-        #         via fe80::8c84:28ff:fe6c:40ae on eth0
-        # 1008-   Type: OSPF-E2 univ
 
         # Grab routes
         if not data:

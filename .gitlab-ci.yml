@@ -11,7 +11,6 @@ test_job:
   - pacman -Syu --noconfirm
   - pacman -S --noconfirm grep python
   - pacman -S --noconfirm python-pytest python-pytest-runner python-pytest-cov python-pylint python-isort mypy pylama python-mccabe
-  - pacman -S --noconfirm iproute2 bird exabgp
   # Run tests
   - python setup.py test
   # Artifacts
