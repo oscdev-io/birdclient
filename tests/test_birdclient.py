@@ -41,7 +41,7 @@ class TestBirdClient():
                 'info': 'Alone',
                 'name': 'ospf4',
                 'proto': 'OSPF',
-                'since': '13:13:28.641',
+                'since': '2019-09-01 13:13:28',
                 'state': 'up',
                 'table': 't_ospf4'
             },
@@ -49,7 +49,7 @@ class TestBirdClient():
                 'info': 'Running',
                 'name': 'ospf6',
                 'proto': 'OSPF',
-                'since': '13:13:28.641',
+                'since': '2019-09-01 13:13:28',
                 'state': 'up',
                 'table': 't_ospf6'
             },
@@ -57,7 +57,7 @@ class TestBirdClient():
                 'info': 't_ospf4 <=> t_kernel4',
                 'name': 'p_ospf4_to_kernel4',
                 'proto': 'Pipe',
-                'since': '13:13:28.641',
+                'since': '2019-09-01 13:13:28',
                 'state': 'up',
                 'table': '---'
             },
@@ -65,7 +65,7 @@ class TestBirdClient():
                 'info': 't_ospf4 <=> t_static4',
                 'name': 'p_ospf4_to_static4',
                 'proto': 'Pipe',
-                'since': '13:13:28.641',
+                'since': '2019-09-01 13:13:28',
                 'state': 'up',
                 'table': '---'
             },
@@ -73,7 +73,7 @@ class TestBirdClient():
                 'info': 't_ospf6 <=> t_kernel6',
                 'name': 'p_ospf6_to_kernel6',
                 'proto': 'Pipe',
-                'since': '13:13:28.641',
+                'since': '2019-09-01 13:13:28',
                 'state': 'up',
                 'table': '---'
             },
@@ -81,7 +81,7 @@ class TestBirdClient():
                 'info': 't_ospf6 <=> t_static6',
                 'name': 'p_ospf6_to_static6',
                 'proto': 'Pipe',
-                'since': '13:13:28.641',
+                'since': '2019-09-01 13:13:28',
                 'state': 'up',
                 'table': '---'
             },
@@ -89,7 +89,7 @@ class TestBirdClient():
                 'info': 't_static4 <=> t_kernel4',
                 'name': 'p_static4_to_kernel4',
                 'proto': 'Pipe',
-                'since': '13:13:28.641',
+                'since': '2019-09-01 13:13:28',
                 'state': 'up',
                 'table': '---'
             },
@@ -97,7 +97,7 @@ class TestBirdClient():
                 'info': 't_static6 <=> t_kernel6',
                 'name': 'p_static6_to_kernel6',
                 'proto': 'Pipe',
-                'since': '13:13:28.641',
+                'since': '2019-09-01 13:13:28',
                 'state': 'up',
                 'table': '---'
             }
@@ -116,7 +116,7 @@ class TestBirdClient():
                 'prefix': '10.0.1.0/24',
                 'primary': '*',
                 'proto': 'static4',
-                'since': '13:36:14.198',
+                'since': '2019-09-01 13:36:14',
                 'type': ['static', 'univ'],
                 'weight': '200',
                 'nexthops': [{
@@ -131,7 +131,7 @@ class TestBirdClient():
                 'prefix': '10.0.2.0/24',
                 'primary': '*',
                 'proto': 'static4',
-                'since': '13:36:14.198',
+                'since': '2019-09-01 13:36:14',
                 'type': ['static', 'univ'],
                 'weight': '200',
                 'nexthops': [{
@@ -157,7 +157,7 @@ class TestBirdClient():
                 'prefix': 'fec0:20::/64',
                 'primary': '*',
                 'proto': 'static6',
-                'since': '13:36:14.708',
+                'since': '2019-09-01 13:36:14',
                 'type': ['static', 'univ'],
                 'weight': '200',
                 'nexthops': [{
@@ -172,7 +172,7 @@ class TestBirdClient():
                 'prefix': 'fec0:10::/64',
                 'primary': '*',
                 'proto': 'static6',
-                'since': '13:36:14.708',
+                'since': '2019-09-01 13:36:14',
                 'type': ['static', 'univ'],
                 'weight': '200',
                 'nexthops': [{
@@ -198,7 +198,7 @@ class TestBirdClient():
                 'prefix': '172.16.100.0/24',
                 'primary': None,
                 'proto': 'kernel4',
-                'since': '13:36:14.199',
+                'since': '2019-09-01 13:36:14',
                 'type': ['inherit', 'univ'],
                 'weight': '10',
                 'nexthops': [{
@@ -213,7 +213,7 @@ class TestBirdClient():
                 'prefix': '10.0.1.0/24',
                 'primary': '*',
                 'proto': 'static4',
-                'since': '13:36:14.199',
+                'since': '2019-09-01 13:36:14',
                 'type': ['static', 'univ'],
                 'weight': '200',
                 'nexthops': [{
@@ -228,7 +228,7 @@ class TestBirdClient():
                 'prefix': '10.0.2.0/24',
                 'primary': '*',
                 'proto': 'static4',
-                'since': '13:36:14.199',
+                'since': '2019-09-01 13:36:14',
                 'type': ['static', 'univ'],
                 'weight': '200',
                 'nexthops': [{
@@ -254,7 +254,7 @@ class TestBirdClient():
                 'prefix': 'fec0:20::/64',
                 'primary': '*',
                 'proto': 'static6',
-                'since': '13:36:14.708',
+                'since': '2019-09-01 13:36:14',
                 'type': ['static', 'univ'],
                 'weight': '200',
                 'nexthops': [{
@@ -269,7 +269,7 @@ class TestBirdClient():
                 'prefix': 'fec0:10::/64',
                 'primary': '*',
                 'proto': 'static6',
-                'since': '13:36:14.708',
+                'since': '2019-09-01 13:36:14',
                 'type': ['static', 'univ'],
                 'weight': '200',
                 'nexthops': [{
@@ -295,7 +295,7 @@ class TestBirdClient():
                 'prefix': '172.16.100.0/24',
                 'primary': None,
                 'proto': 'kernel4',
-                'since': '13:36:14.199',
+                'since': '2019-09-01 13:36:14',
                 'type': ['inherit', 'univ'],
                 'weight': '10',
                 'nexthops': [{
@@ -310,7 +310,7 @@ class TestBirdClient():
                 'prefix': '10.0.1.0/24',
                 'primary': '*',
                 'proto': 'static4',
-                'since': '13:36:14.199',
+                'since': '2019-09-01 13:36:14',
                 'type': ['static', 'univ'],
                 'weight': '200',
                 'nexthops': [{
@@ -325,7 +325,7 @@ class TestBirdClient():
                 'prefix': '10.0.2.0/24',
                 'primary': '*',
                 'proto': 'static4',
-                'since': '13:36:14.199',
+                'since': '2019-09-01 13:36:14',
                 'type': ['static', 'univ'],
                 'weight': '200',
                 'nexthops': [{
@@ -351,7 +351,7 @@ class TestBirdClient():
                 'prefix': 'fec0:20::/64',
                 'primary': '*',
                 'proto': 'static6',
-                'since': '13:36:14.708',
+                'since': '2019-09-01 13:36:14',
                 'type': ['static', 'univ'],
                 'weight': '200',
                 'nexthops': [{
@@ -366,7 +366,7 @@ class TestBirdClient():
                 'prefix': 'fec0:10::/64',
                 'primary': '*',
                 'proto': 'static6',
-                'since': '13:36:14.708',
+                'since': '2019-09-01 13:36:14',
                 'type': ['static', 'univ'],
                 'weight': '200',
                 'nexthops': [{
@@ -396,7 +396,7 @@ class TestBirdClient():
                 'prefix': 'fec0:20::/64',
                 'proto': 'ospf6',
                 'router_id': '172.16.10.1',
-                'since': '14:20:00.666',
+                'since': '2019-09-01 14:20:00',
                 'tag': None,
                 'type': ['OSPF-E2', 'univ'],
                 'nexthops': [{
@@ -415,7 +415,7 @@ class TestBirdClient():
                 'prefix': 'fec0:10::/64',
                 'proto': 'ospf6',
                 'router_id': '172.16.10.1',
-                'since': '14:20:00.666',
+                'since': '2019-09-01 14:20:00',
                 'tag': None,
                 'type': ['OSPF-E2', 'univ'],
                 'nexthops': [{
@@ -434,7 +434,7 @@ class TestBirdClient():
                 'prefix': 'fec0::/64',
                 'proto': 'ospf6',
                 'router_id': '172.16.10.1',
-                'since': '14:19:58.660',
+                'since': '2019-09-01 14:19:58',
                 'tag': None,
                 'type': ['OSPF', 'univ'],
                 'nexthops': [{
@@ -453,7 +453,7 @@ class TestBirdClient():
                 'prefix': 'fefe::/64',
                 'proto': 'ospf6',
                 'router_id': '172.16.10.1',
-                'since': '14:20:00.666',
+                'since': '2019-09-01 14:20:00',
                 'tag': None,
                 'type': ['OSPF', 'univ'],
                 'nexthops': [{
@@ -472,7 +472,7 @@ class TestBirdClient():
                 'prefix': 'fec0:1::/64',
                 'proto': 'ospf6',
                 'router_id': '0.0.0.3',
-                'since': '14:19:58.660',
+                'since': '2019-09-01 14:19:58',
                 'tag': None,
                 'type': ['OSPF', 'univ'],
                 'nexthops': [{
@@ -490,7 +490,7 @@ class TestBirdClient():
                 'prefix': 'fefe:1::/64',
                 'proto': 'ospf6',
                 'router_id': '172.16.10.1',
-                'since': '14:20:00.666',
+                'since': '2019-09-01 14:20:00',
                 'tag': None,
                 'type': ['OSPF-E2', 'univ'],
                 'nexthops': [{

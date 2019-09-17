@@ -1,20 +1,20 @@
 0001 BIRD 2.0.4 ready.
 1007-Table t_ospf6:
- fec0:20::/64         unicast [ospf6 14:20:00.666] E2 (150/20/10000) [172.16.10.1]
+ fec0:20::/64         unicast [ospf6 2019-09-01 14:20:00] E2 (150/20/10000) [172.16.10.1]
         via fe80::8c84:28ff:fe6c:40ae on eth0
 1008-   Type: OSPF-E2 univ
-1007-fec0:10::/64         unicast [ospf6 14:20:00.666] E2 (150/20/10000) [172.16.10.1]
+1007-fec0:10::/64         unicast [ospf6 2019-09-01 14:20:00] E2 (150/20/10000) [172.16.10.1]
         via fe80::8c84:28ff:fe6c:40ae on eth0
 1008-   Type: OSPF-E2 univ
-1007-fec0::/64            unicast [ospf6 14:19:58.660] I (150/20) [172.16.10.1]
+1007-fec0::/64            unicast [ospf6 2019-09-01 14:19:58] I (150/20) [172.16.10.1]
         via fe80::8c84:28ff:fe6c:40ae on eth0
 1008-   Type: OSPF univ
-1007-fefe::/64            unicast [ospf6 14:20:00.666] I (150/30) [172.16.10.1]
+1007-fefe::/64            unicast [ospf6 2019-09-01 14:20:00] I (150/30) [172.16.10.1]
         via fe80::8c84:28ff:fe6c:40ae on eth0
 1008-   Type: OSPF univ
-1007-fec0:1::/64          unicast [ospf6 14:19:58.660] I (150/10) [0.0.0.3]
+1007-fec0:1::/64          unicast [ospf6 2019-09-01 14:19:58] I (150/10) [0.0.0.3]
         dev eth0
 1008-   Type: OSPF univ
-1007-fefe:1::/64          unicast [ospf6 14:20:00.666] E2 (150/30/10000) [172.16.10.1]
+1007-fefe:1::/64          unicast [ospf6 2019-09-01 14:20:00] E2 (150/30/10000) [172.16.10.1]
         via fe80::8c84:28ff:fe6c:40ae on eth0
 1008-   Type: OSPF-E2 univ

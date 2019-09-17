@@ -25,7 +25,7 @@ import socket
 
 from typing import Any, Dict, List, Optional
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 
 class BirdClient:
@@ -102,7 +102,7 @@ class BirdClient:
                              r'(?P<proto>\S+)\s+'
                              r'(?P<table>\S+)\s+'
                              r'(?P<state>\S+)\s+'
-                             r'(?P<since>\S+)\s+'
+                             r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\s+'
                              r'(?P<info>.*)', line)
             if match:
                 # Build up the protocol
@@ -136,7 +136,7 @@ class BirdClient:
                              r'(?P<prefix>\S+)\s+'
                              r'(?P<type>\S+)\s+'
                              r'\[(?P<proto>\S+)\s+'
-                             r'(?P<since>\S+)\]\s+'
+                             r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\]\s+'
                              r'(?P<ospf_type>(?:I|IA|E1|E2))?\s*'
                              r'\((?P<pref>\d+)/(?P<metric1>\d+)(?:/(?P<metric2>\d+))?\)'
                              r'(?:\s+\[(?P<tag>[0-9a-f]+)\])?'
@@ -163,7 +163,7 @@ class BirdClient:
                              r'(?P<prefix>\S+)\s+'
                              r'(?P<type>\S+)\s+'
                              r'\[(?P<proto>\S+)\s+'
-                             r'(?P<since>\S+)\]\s+'
+                             r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\]\s+'
                              r'(?P<primary>\*)?\s*'
                              r'\((?P<weight>\S+)\)', line)
             if match:
