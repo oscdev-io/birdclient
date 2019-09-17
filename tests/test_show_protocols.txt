@@ -1,16 +1,16 @@
 0001 BIRD 2.0.4 ready.
 2002-Name       Proto      Table      State  Since         Info
-1002-device1    Device     ---        up     13:13:28.641
- kernel4    Kernel     t_kernel4  up     13:13:28.641
- kernel6    Kernel     t_kernel6  up     13:13:28.641
- static4    Static     t_static4  up     13:13:28.641
- static6    Static     t_static6  up     13:13:28.641
- p_static4_to_kernel4 Pipe       ---        up     13:13:28.641  t_static4 <=> t_kernel4
- p_static6_to_kernel6 Pipe       ---        up     13:13:28.641  t_static6 <=> t_kernel6
- ospf4      OSPF       t_ospf4    up     13:13:28.641  Alone
- ospf6      OSPF       t_ospf6    up     13:13:28.641  Running
- p_ospf4_to_kernel4 Pipe       ---        up     13:13:28.641  t_ospf4 <=> t_kernel4
- p_ospf6_to_kernel6 Pipe       ---        up     13:13:28.641  t_ospf6 <=> t_kernel6
- p_ospf4_to_static4 Pipe       ---        up     13:13:28.641  t_ospf4 <=> t_static4
- p_ospf6_to_static6 Pipe       ---        up     13:13:28.641  t_ospf6 <=> t_static6
+1002-device1    Device     ---        up     2019-09-01 13:13:28
+ kernel4    Kernel     t_kernel4  up     2019-09-01 13:13:28
+ kernel6    Kernel     t_kernel6  up     2019-09-01 13:13:28
+ static4    Static     t_static4  up     2019-09-01 13:13:28
+ static6    Static     t_static6  up     2019-09-01 13:13:28
+ p_static4_to_kernel4 Pipe       ---        up     2019-09-01 13:13:28  t_static4 <=> t_kernel4
+ p_static6_to_kernel6 Pipe       ---        up     2019-09-01 13:13:28  t_static6 <=> t_kernel6
+ ospf4      OSPF       t_ospf4    up     2019-09-01 13:13:28  Alone
+ ospf6      OSPF       t_ospf6    up     2019-09-01 13:13:28  Running
+ p_ospf4_to_kernel4 Pipe       ---        up     2019-09-01 13:13:28  t_ospf4 <=> t_kernel4
+ p_ospf6_to_kernel6 Pipe       ---        up     2019-09-01 13:13:28  t_ospf6 <=> t_kernel6
+ p_ospf4_to_static4 Pipe       ---        up     2019-09-01 13:13:28  t_ospf4 <=> t_static4
+ p_ospf6_to_static6 Pipe       ---        up     2019-09-01 13:13:28  t_ospf6 <=> t_static6
 0000

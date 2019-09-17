@@ -1,9 +1,9 @@
 0001 BIRD 2.0.4 ready.
 1007-Table t_kernel6:
- fec0:20::/64         unicast [static6 13:36:14.708] * (200)
+ fec0:20::/64         unicast [static6 2019-09-01 13:36:14] * (200)
         via fec0::5 on eth0
 1008-   Type: static univ
-1007-fec0:10::/64         unicast [static6 13:36:14.708] * (200)
+1007-fec0:10::/64         unicast [static6 2019-09-01 13:36:14] * (200)
         via fec0::4 on eth0
 1008-   Type: static univ
 0000
