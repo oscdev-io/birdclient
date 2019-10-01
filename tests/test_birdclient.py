@@ -554,3 +554,50 @@ class TestBirdClient():
         }
 
         assert result == correct_result, 'The show_route_table() result does not match what it should be'
+
+    def test_show_route_table_t_rip4(self):
+        """Test show_route_table."""
+
+        birdclient = BirdClient()
+        result = birdclient.show_route_table('t_rip4', self._load_file('test_show_route_table_t_rip4.txt'))
+
+        correct_result = {
+            '192.168.10.0/24': [{'metric1': '3',
+                                 'nexthops': [{'gateway': '192.168.0.1',
+                                               'interface': 'eth0'}],
+                                 'pref': '120',
+                                 'prefix_type': 'unicast',
+                                 'protocol': 'rip4',
+                                 'since': '2019-10-01 17:59:41'}],
+            '192.168.21.0/24': [{'nexthops': [{'gateway': '192.168.20.3',
+                                               'interface': 'eth1'}],
+                                 'pref': '200',
+                                 'prefix_type': 'unicast',
+                                 'protocol': 'static4',
+                                 'since': '2019-10-01 17:59:38'}]
+        }
+
+        assert result == correct_result, 'The show_route_table() result does not match what it should be'
+
+    def test_show_route_table_t_rip6(self):
+        """Test show_route_table."""
+
+        birdclient = BirdClient()
+        result = birdclient.show_route_table('t_rip6', self._load_file('test_show_route_table_t_rip6.txt'))
+
+        correct_result = {
+            'fc10::/64': [{'metric1': '3',
+                           'nexthops': [{'gateway': 'fe80::1:ff:fe00:1',
+                                         'interface': 'eth0'}],
+                           'pref': '120',
+                           'prefix_type': 'unicast',
+                           'protocol': 'rip6',
+                           'since': '2019-10-01 17:59:42'}],
+            'fc21::/64': [{'nexthops': [{'gateway': 'fc20::3', 'interface': 'eth1'}],
+                           'pref': '200',
+                           'prefix_type': 'unicast',
+                           'protocol': 'static6',
+                           'since': '2019-10-01 17:59:38'}]
+        }
+
+        assert result == correct_result, 'The show_route_table() result does not match what it should be'
