@@ -22,7 +22,6 @@
 
 import re
 import socket
-
 from typing import Any, Dict, List, Optional
 
 __version__ = '0.0.2'
