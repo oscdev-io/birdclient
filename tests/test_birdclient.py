@@ -472,7 +472,8 @@ class TestBirdClient():
         result = birdclient.show_route_table('t_bgp6', self._load_file('test_show_route_table_t_bgp6.txt'))
 
         correct_result = {
-            'fc00:130::/48': [{'attributes': {'BGP.as_path': '65007',
+            'fc00:130::/48': [{'asn': 'AS65007',
+                               'attributes': {'BGP.as_path': '65007',
                                               'BGP.large_community': [('65000',
                                                                        '4',
                                                                        '65414'),
@@ -485,6 +486,8 @@ class TestBirdClient():
                                               'BGP.next_hop': 'fc61::3 '
                                                               'fe80::61:1ff:fe00:1',
                                               'BGP.origin': 'IGP'},
+                               'bestpath': True,
+                               'bgp_type': 'i',
                                'nexthops': [{'gateway': 'fc61::3', 'interface': 'eth1'}],
                                'pref': '100',
                                'prefix_type': 'unicast',
