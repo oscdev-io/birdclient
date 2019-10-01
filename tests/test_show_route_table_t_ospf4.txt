@@ -1,12 +1,31 @@
 0001 BIRD 2.0.4 ready.
 1007-Table t_ospf4:
- 172.16.100.0/24      unicast [kernel4 2019-09-01 13:36:14] (10)
-        via 172.16.10.10 on eth9
-1008-   Type: inherit univ
+ 100.64.50.2/31       unicast [ospf4 2019-09-30 17:14:13] I (150/40) [100.64.10.2]
+       via 100.64.20.1 on eth0 weight 1
+       via 100.64.20.5 on eth0 weight 1
+1008-  Type: OSPF univ
+1012-  OSPF.metric1: 40
+       OSPF.router_id: 100.64.10.2
+1007-172.16.100.0/24      unicast [kernel4 2019-09-01 13:36:14] (10)
+       via 172.16.10.10 on eth9
+1008-  Type: inherit univ
 1007-10.0.1.0/24          unicast [static4 2019-09-01 13:36:14] * (200)
-        via 192.168.0.4 on eth0
-1008-   Type: static univ
+       via 192.168.0.4 on eth0
+1008-  Type: static univ
 1007-10.0.2.0/24          unicast [static4 2019-09-01 13:36:14] * (200)
-        via 192.168.0.5 on eth0
-1008-   Type: static univ
+       via 192.168.0.5 on eth0
+1008-  Type: static univ
+1007-100.64.43.2/31       unicast [ospf4 2019-09-30 17:14:09] I (150/20) [100.64.20.1]
+       via 100.64.20.1 on eth0
+1008-  Type: OSPF univ
+1012-  OSPF.metric1: 20
+       OSPF.router_id: 100.64.20.1
+1007-100.90.0.0/28        unicast [ospf4 2019-09-30 17:14:13] E2 (150/40/10000) [100.64.10.2]
+       via 100.64.20.1 on eth0 weight 1
+       via 100.64.20.5 on eth0 weight 1
+1008-  Type: OSPF-E2 univ
+1012-  OSPF.metric1: 40
+       OSPF.metric2: 10000
+       OSPF.tag: 0x00000000
+       OSPF.router_id: 100.64.10.2
 0000
