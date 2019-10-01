@@ -1,0 +1,43 @@
+0001 BIRD 2.0.4 ready.
+1007-Table t_bgp6:
+ fc00:130::/48        unicast [bgp_AS65007_client3_peer6 2019-09-30 17:14:00] * (100) [AS65007i]
+ 	via fc61::3 on eth1
+1008-	Type: BGP univ
+1012-	BGP.origin: IGP
+ 	BGP.as_path: 65007
+ 	BGP.next_hop: fc61::3 fe80::61:1ff:fe00:1
+ 	BGP.local_pref: 750
+ 	BGP.large_community: (65000, 4, 65414) (65007, 3, 1) (65000, 3, 2) (65000, 1, 901)
+1007-                     unicast [bgp_AS65000_rr2_peer6 2019-09-30 17:14:20 from fc20::3] (100) [i]
+ 	via fe80::20:1ff:fe00:1 on eth0 weight 1
+ 	via fe80::20:1ff:fe02:1 on eth0 weight 1
+1008-	Type: BGP univ
+1012-	BGP.origin: IGP
+ 	BGP.as_path: 
+ 	BGP.next_hop: fc50::5
+ 	BGP.local_pref: 940
+ 	BGP.originator_id: 100.64.10.2
+ 	BGP.cluster_list: 0.0.0.1
+ 	BGP.large_community: (65000, 3, 1)
+1007-fc20::/64            unicast [bgp_AS65000_rr1_peer6 2019-09-30 17:14:15 from fc10::3] * (100) [i]
+ 	via fc20::1 on eth0
+1008-	Type: BGP univ
+1012-	BGP.origin: IGP
+ 	BGP.as_path: 
+ 	BGP.next_hop: fc20::1
+ 	BGP.local_pref: 930
+ 	BGP.originator_id: 100.64.20.1
+ 	BGP.cluster_list: 0.0.0.1
+ 	BGP.large_community: (65000, 3, 1)
+1007-                     unicast [bgp_AS65000_rr2_peer6 2019-09-30 17:14:14 from fc20::3] (100) [AS65006i]
+ 	via fe80::20:1ff:fe00:1 on eth0 weight 1
+ 	via fe80::20:1ff:fe02:1 on eth0 weight 1
+1008-	Type: BGP univ
+1012-	BGP.origin: IGP
+ 	BGP.as_path: 65006
+ 	BGP.next_hop: fc40::11 fe80::40:1ff:fe00:1
+ 	BGP.local_pref: 450
+ 	BGP.originator_id: 100.64.10.1
+ 	BGP.cluster_list: 0.0.0.1
+ 	BGP.large_community: (65000, 3, 3) (65006, 3, 1)
+0000 
