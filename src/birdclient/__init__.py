@@ -27,6 +27,10 @@ from typing import Any, Dict, List, Optional
 __version__ = '0.0.2'
 
 
+class BirdClientParseError(RuntimeError):
+    """Exception for parsing errors."""
+
+
 class BirdClient:
     """BIRD client class."""
 
@@ -117,117 +121,270 @@ class BirdClient:
 
         return res
 
-    # pylama: ignore=R0915,C901
-    def show_route_table(self, table: str, data: Optional[List[str]] = None) -> List:
+    # pylama: ignore=R0914,R0912,R0915,C901
+    def show_route_table(self, table: str, data: Optional[List[str]] = None) -> Dict:
         """Return parsed BIRD routing table."""
 
         # Grab routes
         if not data:
             data = self.query(f'show route table {table} all')
 
-        res = []
+        res: Dict[str, Any] = {}
 
         # Loop with data to grab information we need
-        route: Dict[str, Any] = {}
+        code = ''
+        sources: List[Dict] = []
+        source: Dict[str, Any] = {}
+        prefix: str = ""
+        value: Any
         for line in data:
-            # Grab a OSPF route
-            match = re.match(r'^(?:1007-| )'
-                             r'(?P<prefix>\S+)\s+'
-                             r'(?P<type>\S+)\s+'
-                             r'\[(?P<proto>\S+)\s+'
-                             r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\]\s+'
-                             r'(?P<ospf_type>(?:I|IA|E1|E2))?\s*'
-                             r'\((?P<pref>\d+)/(?P<metric1>\d+)(?:/(?P<metric2>\d+))?\)'
-                             r'(?:\s+\[(?P<tag>[0-9a-f]+)\])?'
-                             r'(?:\s+\[(?P<router_id>[0-9\.]+)\])?', line)
+            match = re.match(r'^(?P<code>[0-9]{4})-?\s*(?P<line>.*)$', line)
             if match:
-                # Build the route
-                route = {}
-                route['prefix'] = match.group('prefix')
-                route['type'] = match.group('type')
-                route['proto'] = match.group('proto')
-                route['since'] = match.group('since')
-                route['ospf_type'] = match.group('ospf_type')
-                route['pref'] = match.group('pref')
-                route['metric1'] = match.group('metric1')
-                route['metric2'] = match.group('metric2')
-                route['tag'] = match.group('tag')
-                route['router_id'] = match.group('router_id')
-                # Append route to our results
-                res.append(route)
+                code = match.group('code')
+                line = match.group('line')
+
+            # End of output
+            if code == '0000':
+                # If we had sources, save them
+                if sources:
+                    res[prefix] = sources
+                break
+
+            # Start of output
+            if code == '0001':
                 continue
 
-            # Grab a normal route
-            match = re.match(r'^(?:1007-| )'
-                             r'(?P<prefix>\S+)\s+'
-                             r'(?P<type>\S+)\s+'
-                             r'\[(?P<proto>\S+)\s+'
-                             r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\]\s+'
-                             r'(?P<primary>\*)?\s*'
-                             r'\((?P<weight>\S+)\)', line)
-            if match:
-                # Build the route
-                route = {}
-                route['prefix'] = match.group('prefix')
-                route['type'] = match.group('type')
-                route['proto'] = match.group('proto')
-                route['since'] = match.group('since')
-                route['primary'] = match.group('primary')
-                route['weight'] = match.group('weight')
-                # Append the route to our results
-                res.append(route)
+            # Route info
+            if code == '1007':
+                # Exclude the table line
+                match = re.match(r'^Table ', line)
+                if match:
+                    # If we had sources, save them
+                    if sources:
+                        res[prefix] = sources
+                    sources = []
+                    source = {}
+                    continue
+
+                #
+                # Match IPv4 prefix
+                #
+                match = re.match(r'^\s*(?P<prefix>[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2})\s+(?P<line>.+)$',
+                                 line)
+                if match:
+                    # If we had sources, save them
+                    if sources:
+                        res[prefix] = sources
+                    sources = []
+                    source = {}
+                    prefix = match.group('prefix')
+                    line = match.group('line')
+
+                #
+                # Match IPv6 prefix
+                #
+                match = re.match(r'^\s*(?P<prefix>[a-f0-9:]+\/[0-9]{1,3})\s+(?P<line>.+)$',
+                                 line)
+                if match:
+                    # If we had sources, save them
+                    if sources:
+                        res[prefix] = sources
+                    sources = []
+                    source = {}
+                    prefix = match.group('prefix')
+                    line = match.group('line')
+
+                #
+                # Grab a "normal" route
+                #
+                match = re.match(r'(?P<prefix_type>(?:unicast))\s+'
+                                 r'\[(?P<protocol>\S+)\s+'
+                                 r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\] '
+                                 r'(?:(?P<bestpath>\*) )?'
+                                 r'\((?P<pref>\d+)\)', line)
+                if match:
+                    source = {}
+                    source['prefix_type'] = match.group('prefix_type')
+                    source['protocol'] = match.group('protocol')
+                    source['since'] = match.group('since')
+                    source['pref'] = match.group('pref')
+                    # Add source
+                    sources.append(source)
+                    continue
+
+                #
+                # Grab a BGP route
+                #
+                match = re.match(r'(?P<prefix_type>(?:unicast)) '
+                                 r'\['
+                                 r'(?P<protocol>\S+) '
+                                 r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})'
+                                 r'(?: from (?P<from>[a-z0-9\.:]+))?'
+                                 r'\] '
+                                 r'(?:(?P<bestpath>\*) )?'
+                                 r'\((?P<pref>\d+)(?:/(?P<metric>\d+))?\) '
+                                 r'\['
+                                 r'(?P<asn>AS[0-9]+)?'
+                                 r'(?P<bgp_type>[ie\?])'
+                                 r'\]', line)
+                if match:
+                    source = {}
+                    source['prefix_type'] = match.group('prefix_type')
+                    source['protocol'] = match.group('protocol')
+                    source['since'] = match.group('since')
+                    # Check if we got a 'from'
+                    bgp_from = match.group('from')
+                    if bgp_from:
+                        source['from'] = bgp_from
+                    # Check if we are the bestpath
+                    bestpath = match.group('bestpath')
+                    if bestpath:
+                        source['bestpath'] = True
+                    else:
+                        source['bestpath'] = False
+
+                    source['pref'] = match.group('pref')
+                    # Check if we got a metric
+                    metric = match.group('metric')
+                    if metric:
+                        source['metric'] = metric
+                    # Check if we got an ASN
+                    asn = match.group('asn')
+                    if asn:
+                        source['asn'] = asn
+                    source['bgp_type'] = match.group('bgp_type')
+                    # Add source
+                    sources.append(source)
+                    continue
+
+                #
+                # Grab a OSPF route
+                #
+                match = re.match(r'(?P<prefix_type>(?:unicast))\s+'
+                                 r'\[(?P<protocol>\S+)\s+'
+                                 r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\] '
+                                 r'(?P<ospf_type>(?:I|IA|E1|E2)) '
+                                 r'\((?P<pref>\d+)/(?P<metric1>\d+)(?:/(?P<metric2>\d+))?\)'
+                                 r'(?: \[(?P<tag>[0-9a-f]+)\])?'
+                                 r'(?: \[(?P<router_id>[0-9\.]+)\])', line)
+                if match:
+                    source = {}
+                    source['prefix_type'] = match.group('prefix_type')
+                    source['protocol'] = match.group('protocol')
+                    source['since'] = match.group('since')
+                    source['ospf_type'] = match.group('ospf_type')
+                    source['pref'] = match.group('pref')
+                    source['metric1'] = match.group('metric1')
+                    # Check if we have a metric2
+                    metric2 = match.group('metric2')
+                    if metric2:
+                        source['metric2'] = metric2
+                    # Check if we have a tag
+                    tag = match.group('tag')
+                    if tag:
+                        source['tag'] = tag
+                    source['router_id'] = match.group('router_id')
+                    # Add source
+                    sources.append(source)
+                    continue
+
+                #
+                # Grab nexthop details via a gateway
+                #
+                match = re.match(r'\s+via\s+'
+                                 r'(?P<gateway>\S+)\s+'
+                                 r'on (?P<interface>\S+)'
+                                 r'(?: mpls (?P<mpls>[0-9/]+))?'
+                                 r'(?: (?P<onlink>onlink))?'
+                                 r'(?: weight (?P<weight>[0-9]+))?', line)
+                if match:
+                    nexthop = {}
+                    # Grab gateway
+                    gateway = match.group('gateway')
+                    if gateway:
+                        nexthop['gateway'] = gateway
+                    # Grab interface
+                    interface = match.group('interface')
+                    if interface:
+                        nexthop['interface'] = interface
+                    # Grab mpls
+                    mpls = match.group('mpls')
+                    if mpls:
+                        nexthop['mpls'] = mpls
+                    # Grab onlink
+                    onlink = match.group('onlink')
+                    if onlink:
+                        nexthop['onlink'] = onlink
+                    # Grab weight
+                    weight = match.group('weight')
+                    if weight:
+                        nexthop['weight'] = weight
+                    # Save nexthops
+                    if 'nexthops' not in source:
+                        source['nexthops'] = []
+                    source['nexthops'].append(nexthop)
+                    continue
+
+                #
+                # Grab nexthop details via a device
+                #
+                match = re.match(r'\s+dev (?P<interface>\S+)'
+                                 r'(?: mpls (?P<mpls>[0-9/]+))?'
+                                 r'(?: (?P<onlink>onlink))?'
+                                 r'(?: weight (?P<weight>[0-9]+))?', line)
+                if match:
+                    source = {}
+                    source['interface'] = match.group('interface')
+                    # Check if we got an MPLS item
+                    mpls = match.group('mpls')
+                    if mpls:
+                        source['mpls'] = mpls
+                    # Check if we got an onlink option
+                    onlink = match.group('onlink')
+                    if onlink:
+                        source['onlink'] = onlink
+                    # Check if we got a weight option
+                    weight = match.group('weight')
+                    if weight:
+                        source['weight'] = weight
+                    # Save nexthops
+                    if 'nexthops' not in source:
+                        source['nexthops'] = []
+                    source['nexthops'].append(nexthop)
+                    continue
+
+            # Type
+            if code == '1008':
+                match = re.match(r'^\s*Type: (?P<route_type>.+)$', line)
+                if match:
+                    source['type'] = match.group('route_type').split()
+                else:
+                    raise BirdClientParseError(f'Failed to parse type: {line}')
                 continue
 
-            # Grab nexthop details via a gateway
-            match = re.match(r'\s+via\s+'
-                             r'(?P<gateway>\S+)\s+'
-                             r'on (?P<interface>\S+)'
-                             r'(?: mpls (?P<mpls>[0-9/]+))?'
-                             r'(?: (?P<onlink>onlink))?'
-                             r'(?: weight (?P<weight>[0-9]+))?', line)
-            if match:
-                # Build the nexthop
-                if 'nexthops' not in route:
-                    route['nexthops'] = []
-                nexthop = {}
-                nexthop['gateway'] = match.group('gateway')
-                nexthop['interface'] = match.group('interface')
-                nexthop['mpls'] = match.group('mpls')
-                nexthop['onlink'] = match.group('onlink')
-                nexthop['weight'] = match.group('weight')
-                # Save gateway
-                route['nexthops'].append(nexthop)
+            # Pull off route attributes
+            if code == '1012':
+                match = re.match(r'^\s*(?P<attrib>[A-Za-z0-9\._]+): (?P<value>.*)$', line)
+                if not match:
+                    raise BirdClientParseError(f'Failed to parse code 1012: {line}')
+                attrib = match.group('attrib')
+                value = match.group('value')
+                # Check for special cases
+                if attrib == 'BGP.large_community':
+                    match_all = re.findall(r'\((?P<lc1>\d+), (?P<lc2>\d+), (?P<lc3>\d+)\)\s*', value)
+                    if not match_all:
+                        raise BirdClientParseError(f'Failed to parse large community: {value}')
+                    # Replace value
+                    value = match_all
+
+                # Check if we have attributes, if not, add
+                if 'attributes' not in source:
+                    source['attributes'] = {}
+                source['attributes'][attrib] = value
                 continue
 
-            # Grab nexthop details via a device
-            match = re.match(r'\s+dev (?P<interface>\S+)'
-                             r'(?: mpls (?P<mpls>[0-9/]+))?'
-                             r'(?: (?P<onlink>onlink))?'
-                             r'(?: weight (?P<weight>[0-9]+))?', line)
-            if match:
-                # Build the nexthop
-                if 'nexthops' not in route:
-                    route['nexthops'] = []
-                nexthop = {}
-                nexthop['interface'] = match.group('interface')
-                nexthop['mpls'] = match.group('mpls')
-                nexthop['onlink'] = match.group('onlink')
-                nexthop['weight'] = match.group('weight')
-                # Save gateway
-                route['nexthops'].append(nexthop)
-                continue
-
-            # Grab type details
-            match = re.match(r'1008-\s+'
-                             r'Type: (?P<type>.*)', line)
-            if match:
-                # Work out the types
-                if 'type' not in route:
-                    route['type'] = []
-                route_types = match.group('type').split()
-                # Save type
-                route['type'] = route_types
-                continue
+            # If we didn't match the line, we need to raise an exception
+            raise BirdClientParseError(f'Failed to parse line: {line}')
 
         return res
 
