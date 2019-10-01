@@ -289,6 +289,26 @@ class BirdClient:
                     continue
 
                 #
+                # Grab a RIP route
+                #
+                # unicast [rip6 2019-10-01 17:59:41] (120/3)
+
+                match = re.match(r'(?P<prefix_type>(?:unicast))\s+'
+                                 r'\[(?P<protocol>\S+)\s+'
+                                 r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\] '
+                                 r'\((?P<pref>\d+)/(?P<metric1>\d+)\)', line)
+                if match:
+                    source = {}
+                    source['prefix_type'] = match.group('prefix_type')
+                    source['protocol'] = match.group('protocol')
+                    source['since'] = match.group('since')
+                    source['pref'] = match.group('pref')
+                    source['metric1'] = match.group('metric1')
+                    # Add source
+                    sources.append(source)
+                    continue
+
+                #
                 # Grab nexthop details via a gateway
                 #
                 match = re.match(r'\s+via\s+'
