@@ -59,70 +59,54 @@ class TestBirdClient():
         result = birdclient.show_protocols(self._load_file('test_show_protocols.txt'))
 
         correct_result = {
-            'ospf4': {
-                'info': 'Alone',
-                'name': 'ospf4',
-                'proto': 'OSPF',
-                'since': since_field(),
-                'state': 'up',
-                'table': 't_ospf4'
-            },
-            'ospf6': {
-                'info': 'Running',
-                'name': 'ospf6',
-                'proto': 'OSPF',
-                'since': since_field(),
-                'state': 'up',
-                'table': 't_ospf6'
-            },
-            'p_ospf4_to_kernel4': {
-                'info': 't_ospf4 <=> t_kernel4',
-                'name': 'p_ospf4_to_kernel4',
-                'proto': 'Pipe',
-                'since': since_field(),
-                'state': 'up',
-                'table': '---'
-            },
-            'p_ospf4_to_static4': {
-                'info': 't_ospf4 <=> t_static4',
-                'name': 'p_ospf4_to_static4',
-                'proto': 'Pipe',
-                'since': since_field(),
-                'state': 'up',
-                'table': '---'
-            },
-            'p_ospf6_to_kernel6': {
-                'info': 't_ospf6 <=> t_kernel6',
-                'name': 'p_ospf6_to_kernel6',
-                'proto': 'Pipe',
-                'since': since_field(),
-                'state': 'up',
-                'table': '---'
-            },
-            'p_ospf6_to_static6': {
-                'info': 't_ospf6 <=> t_static6',
-                'name': 'p_ospf6_to_static6',
-                'proto': 'Pipe',
-                'since': since_field(),
-                'state': 'up',
-                'table': '---'
-            },
-            'p_static4_to_kernel4': {
-                'info': 't_static4 <=> t_kernel4',
-                'name': 'p_static4_to_kernel4',
-                'proto': 'Pipe',
-                'since': since_field(),
-                'state': 'up',
-                'table': '---'
-            },
-            'p_static6_to_kernel6': {
-                'info': 't_static6 <=> t_kernel6',
-                'name': 'p_static6_to_kernel6',
-                'proto': 'Pipe',
-                'since': since_field(),
-                'state': 'up',
-                'table': '---'
-            }
+            'ospf4': {'info': 'Alone',
+                      'name': 'ospf4',
+                      'proto': 'OSPF',
+                      'since': '2019-09-01 13:13:28',
+                      'state': 'up',
+                      'table': 't_ospf4'},
+            'ospf6': {'info': 'Running',
+                      'name': 'ospf6',
+                      'proto': 'OSPF',
+                      'since': '2019-09-01 13:13:28',
+                      'state': 'up',
+                      'table': 't_ospf6'},
+            'p_ospf4_to_kernel4': {'info': 't_ospf4 <=> t_kernel4',
+                                   'name': 'p_ospf4_to_kernel4',
+                                   'proto': 'Pipe',
+                                   'since': '2019-09-01 13:13:28',
+                                   'state': 'up',
+                                   'table': '---'},
+            'p_ospf4_to_static4': {'info': 't_ospf4 <=> t_static4',
+                                   'name': 'p_ospf4_to_static4',
+                                   'proto': 'Pipe',
+                                   'since': '2019-09-01 13:13:28',
+                                   'state': 'up',
+                                   'table': '---'},
+            'p_ospf6_to_kernel6': {'info': 't_ospf6 <=> t_kernel6',
+                                   'name': 'p_ospf6_to_kernel6',
+                                   'proto': 'Pipe',
+                                   'since': '2019-09-01 13:13:28',
+                                   'state': 'up',
+                                   'table': '---'},
+            'p_ospf6_to_static6': {'info': 't_ospf6 <=> t_static6',
+                                   'name': 'p_ospf6_to_static6',
+                                   'proto': 'Pipe',
+                                   'since': '2019-09-01 13:13:28',
+                                   'state': 'up',
+                                   'table': '---'},
+            'p_static4_to_kernel4': {'info': 't_static4 <=> t_kernel4',
+                                     'name': 'p_static4_to_kernel4',
+                                     'proto': 'Pipe',
+                                     'since': '2019-09-01 13:13:28',
+                                     'state': 'up',
+                                     'table': '---'},
+            'p_static6_to_kernel6': {'info': 't_static6 <=> t_kernel6',
+                                     'name': 'p_static6_to_kernel6',
+                                     'proto': 'Pipe',
+                                     'since': '2019-09-01 13:13:28',
+                                     'state': 'up',
+                                     'table': '---'}
         }
 
         assert result == correct_result, 'The show_protocols() result does not match what it should be'
