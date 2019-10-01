@@ -601,3 +601,35 @@ class TestBirdClient():
         }
 
         assert result == correct_result, 'The show_route_table() result does not match what it should be'
+
+    def test_show_route_table_t_direct4(self):
+        """Test show_route_table."""
+
+        birdclient = BirdClient()
+        result = birdclient.show_route_table('t_direct4', self._load_file('test_show_route_table_t_direct4.txt'))
+
+        correct_result = {
+            '192.168.10.0/24': [{'nexthops': [{'interface': 'eth1'}],
+                                 'pref': '240',
+                                 'prefix_type': 'unicast',
+                                 'protocol': 'direct4_rip',
+                                 'since': '2019-10-01 18:42:53'}]
+        }
+
+        assert result == correct_result, 'The show_route_table() result does not match what it should be'
+
+    def test_show_route_table_t_direct6(self):
+        """Test show_route_table."""
+
+        birdclient = BirdClient()
+        result = birdclient.show_route_table('t_direct6', self._load_file('test_show_route_table_t_direct6.txt'))
+
+        correct_result = {
+            'fc10::/64': [{'nexthops': [{'interface': 'eth1'}],
+                           'pref': '240',
+                           'prefix_type': 'unicast',
+                           'protocol': 'direct6_rip',
+                           'since': '2019-10-01 18:42:53'}]
+        }
+
+        assert result == correct_result, 'The show_route_table() result does not match what it should be'

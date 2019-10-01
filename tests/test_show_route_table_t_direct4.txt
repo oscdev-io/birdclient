@@ -1,0 +1,5 @@
+0001 BIRD 2.0.6 ready.
+1007-Table t_direct4_rip:
+ 192.168.10.0/24      unicast [direct4_rip 2019-10-01 18:42:53] * (240)
+ 	dev eth1
+0000 
