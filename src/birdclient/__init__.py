@@ -31,11 +31,11 @@ class BirdClient:
     """BIRD client class."""
 
     # Socket file
-    _socket_file: Optional[str]
+    _socket_file: str
     # Ending lines for bird control channel
     _ending_lines: List[bytes]
 
-    def __init__(self, socket_file: Optional[str] = None):
+    def __init__(self, socket_file: str = '/run/bird.ctl'):
         """Initialize the object."""
 
         # Set socket file
