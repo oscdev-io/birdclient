@@ -197,11 +197,11 @@ class BirdClient:
                 #
                 # Grab a "normal" route
                 #
-                match = re.match(r'(?P<prefix_type>(?:unicast))\s+'
+                match = re.match(r'^(?P<prefix_type>(?:unicast))\s+'
                                  r'\[(?P<protocol>\S+)\s+'
                                  r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\] '
                                  r'(?:(?P<bestpath>\*) )?'
-                                 r'\((?P<pref>\d+)\)', line)
+                                 r'\((?P<pref>\d+)\)$', line)
                 if match:
                     source = {}
                     source['prefix_type'] = match.group('prefix_type')
@@ -215,7 +215,7 @@ class BirdClient:
                 #
                 # Grab a BGP route
                 #
-                match = re.match(r'(?P<prefix_type>(?:unicast)) '
+                match = re.match(r'^(?P<prefix_type>(?:unicast)) '
                                  r'\['
                                  r'(?P<protocol>\S+) '
                                  r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})'
@@ -226,7 +226,7 @@ class BirdClient:
                                  r'\['
                                  r'(?P<asn>AS[0-9]+)?'
                                  r'(?P<bgp_type>[ie\?])'
-                                 r'\]', line)
+                                 r'\]$', line)
                 if match:
                     source = {}
                     source['prefix_type'] = match.group('prefix_type')
@@ -260,13 +260,13 @@ class BirdClient:
                 #
                 # Grab a OSPF route
                 #
-                match = re.match(r'(?P<prefix_type>(?:unicast))\s+'
+                match = re.match(r'^(?P<prefix_type>(?:unicast))\s+'
                                  r'\[(?P<protocol>\S+)\s+'
                                  r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\] '
                                  r'(?P<ospf_type>(?:I|IA|E1|E2)) '
                                  r'\((?P<pref>\d+)/(?P<metric1>\d+)(?:/(?P<metric2>\d+))?\)'
                                  r'(?: \[(?P<tag>[0-9a-f]+)\])?'
-                                 r'(?: \[(?P<router_id>[0-9\.]+)\])', line)
+                                 r'(?: \[(?P<router_id>[0-9\.]+)\])$', line)
                 if match:
                     source = {}
                     source['prefix_type'] = match.group('prefix_type')
@@ -293,10 +293,10 @@ class BirdClient:
                 #
                 # unicast [rip6 2019-10-01 17:59:41] (120/3)
 
-                match = re.match(r'(?P<prefix_type>(?:unicast))\s+'
+                match = re.match(r'^(?P<prefix_type>(?:unicast))\s+'
                                  r'\[(?P<protocol>\S+)\s+'
                                  r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\] '
-                                 r'\((?P<pref>\d+)/(?P<metric1>\d+)\)', line)
+                                 r'\((?P<pref>\d+)/(?P<metric1>\d+)\)$', line)
                 if match:
                     source = {}
                     source['prefix_type'] = match.group('prefix_type')
@@ -311,12 +311,49 @@ class BirdClient:
                 #
                 # Grab nexthop details via a gateway
                 #
-                match = re.match(r'\s+via\s+'
+                match = re.match(r'^\s+via\s+'
                                  r'(?P<gateway>\S+)\s+'
                                  r'on (?P<interface>\S+)'
                                  r'(?: mpls (?P<mpls>[0-9/]+))?'
                                  r'(?: (?P<onlink>onlink))?'
-                                 r'(?: weight (?P<weight>[0-9]+))?', line)
+                                 r'(?: weight (?P<weight>[0-9]+))?$', line)
+                if match:
+                    nexthop = {}
+                    # Grab gateway
+                    gateway = match.group('gateway')
+                    if gateway:
+                        nexthop['gateway'] = gateway
+                    # Grab interface
+                    interface = match.group('interface')
+                    if interface:
+                        nexthop['interface'] = interface
+                    # Grab mpls
+                    mpls = match.group('mpls')
+                    if mpls:
+                        nexthop['mpls'] = mpls
+                    # Grab onlink
+                    onlink = match.group('onlink')
+                    if onlink:
+                        nexthop['onlink'] = onlink
+                    # Grab weight
+                    weight = match.group('weight')
+                    if weight:
+                        nexthop['weight'] = weight
+                    # Save nexthops
+                    if 'nexthops' not in source:
+                        source['nexthops'] = []
+                    source['nexthops'].append(nexthop)
+                    continue
+
+                #
+                # Grab nexthop details via a gateway
+                #
+                match = re.match(r'^\s+via\s+'
+                                 r'(?P<gateway>\S+)\s+'
+                                 r'on (?P<interface>\S+)'
+                                 r'(?: mpls (?P<mpls>[0-9/]+))?'
+                                 r'(?: (?P<onlink>onlink))?'
+                                 r'(?: weight (?P<weight>[0-9]+))?$', line)
                 if match:
                     nexthop = {}
                     # Grab gateway
@@ -348,25 +385,25 @@ class BirdClient:
                 #
                 # Grab nexthop details via a device
                 #
-                match = re.match(r'\s+dev (?P<interface>\S+)'
+                match = re.match(r'^\s+dev (?P<interface>\S+)'
                                  r'(?: mpls (?P<mpls>[0-9/]+))?'
                                  r'(?: (?P<onlink>onlink))?'
-                                 r'(?: weight (?P<weight>[0-9]+))?', line)
+                                 r'(?: weight (?P<weight>[0-9]+))?$', line)
                 if match:
-                    source = {}
-                    source['interface'] = match.group('interface')
+                    nexthop = {}
+                    nexthop['interface'] = match.group('interface')
                     # Check if we got an MPLS item
                     mpls = match.group('mpls')
                     if mpls:
-                        source['mpls'] = mpls
+                        nexthop['mpls'] = mpls
                     # Check if we got an onlink option
                     onlink = match.group('onlink')
                     if onlink:
-                        source['onlink'] = onlink
+                        nexthop['onlink'] = onlink
                     # Check if we got a weight option
                     weight = match.group('weight')
                     if weight:
-                        source['weight'] = weight
+                        nexthop['weight'] = weight
                     # Save nexthops
                     if 'nexthops' not in source:
                         source['nexthops'] = []
