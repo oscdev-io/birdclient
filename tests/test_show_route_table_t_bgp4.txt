@@ -1,0 +1,35 @@
+0001 BIRD 2.0.4 ready.
+1007-Table t_bgp4:
+  100.201.0.0/24       unicast [bgp_AS65000_rr1_peer4 2019-09-30 17:14:14 from 100.64.10.3] * (100) [AS65006i]
+ 	via 100.64.20.1 on eth0 weight 1
+ 	via 100.64.20.5 on eth0 weight 1
+1008-	Type: BGP univ
+1012-	BGP.origin: IGP
+ 	BGP.as_path: 65006
+ 	BGP.next_hop: 100.64.40.11
+ 	BGP.local_pref: 450
+ 	BGP.originator_id: 100.64.10.1
+ 	BGP.cluster_list: 0.0.0.1
+ 	BGP.large_community: (65000, 3, 3) (65006, 3, 1)
+1007-                     unicast [bgp_AS65000_rr2_peer4 2019-09-30 17:14:09 from 100.64.20.3] (100) [AS65004i]
+ 	via 100.64.20.1 on eth0
+1008-	Type: BGP univ
+1012-	BGP.origin: IGP
+ 	BGP.as_path: 65004
+ 	BGP.next_hop: 100.64.43.2
+ 	BGP.local_pref: 150
+ 	BGP.originator_id: 100.64.20.1
+ 	BGP.cluster_list: 0.0.0.1
+ 	BGP.large_community: (65000, 3, 4) (65004, 3, 1)
+1007-100.100.0.0/24       unicast [bgp_AS65000_rr1_peer4 2019-09-30 17:14:14 from 100.64.10.3] * (100) [AS65001i]
+ 	via 100.64.20.1 on eth0 weight 1
+ 	via 100.64.20.5 on eth0 weight 1
+1008-	Type: BGP univ
+1012-	BGP.origin: IGP
+ 	BGP.as_path: 65001
+ 	BGP.next_hop: 100.64.50.3
+ 	BGP.local_pref: 750
+ 	BGP.originator_id: 100.64.10.2
+ 	BGP.cluster_list: 0.0.0.1
+ 	BGP.large_community: (65000, 1, 900) (65000, 3, 2) (65000, 4, 65004) (65001, 3, 1)
+0000

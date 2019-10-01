@@ -297,51 +297,6 @@ class TestBirdClient():
         result = birdclient.show_route_table('t_ospf4', self._load_file('test_show_route_table_t_ospf4.txt'))
 
         correct_result = [
-            {
-                'prefix': '172.16.100.0/24',
-                'primary': None,
-                'proto': 'kernel4',
-                'since': since_field(),
-                'type': ['inherit', 'univ'],
-                'weight': '10',
-                'nexthops': [{
-                    'gateway': '172.16.10.10',
-                    'interface': 'eth9',
-                    'mpls': None,
-                    'onlink': None,
-                    'weight': None
-                }]
-            },
-            {
-                'prefix': '10.0.1.0/24',
-                'primary': '*',
-                'proto': 'static4',
-                'since': since_field(),
-                'type': ['static', 'univ'],
-                'weight': '200',
-                'nexthops': [{
-                    'gateway': '192.168.0.4',
-                    'interface': 'eth0',
-                    'mpls': None,
-                    'onlink': None,
-                    'weight': None
-                }]
-            },
-            {
-                'prefix': '10.0.2.0/24',
-                'primary': '*',
-                'proto': 'static4',
-                'since': since_field(),
-                'type': ['static', 'univ'],
-                'weight': '200',
-                'nexthops': [{
-                    'gateway': '192.168.0.5',
-                    'interface': 'eth0',
-                    'mpls': None,
-                    'onlink': None,
-                    'weight': None
-                }]
-            }
         ]
 
         assert result == correct_result, 'The show_route_table() result does not match what it should be'
@@ -353,36 +308,6 @@ class TestBirdClient():
         result = birdclient.show_route_table('t_ospf6', self._load_file('test_show_route_table_t_ospf6-1.txt'))
 
         correct_result = [
-            {
-                'prefix': 'fec0:20::/64',
-                'primary': '*',
-                'proto': 'static6',
-                'since': since_field(),
-                'type': ['static', 'univ'],
-                'weight': '200',
-                'nexthops': [{
-                    'gateway': 'fec0::5',
-                    'interface': 'eth0',
-                    'mpls': None,
-                    'onlink': None,
-                    'weight': None
-                }]
-            },
-            {
-                'prefix': 'fec0:10::/64',
-                'primary': '*',
-                'proto': 'static6',
-                'since': since_field(),
-                'type': ['static', 'univ'],
-                'weight': '200',
-                'nexthops': [{
-                    'gateway': 'fec0::4',
-                    'interface': 'eth0',
-                    'mpls': None,
-                    'onlink': None,
-                    'weight': None
-                }]
-            }
         ]
 
         assert result == correct_result, 'The show_route_table() result does not match what it should be'
@@ -394,119 +319,28 @@ class TestBirdClient():
         result = birdclient.show_route_table('t_ospf6', self._load_file('test_show_route_table_t_ospf6-2.txt'))
 
         correct_result = [
-            {
-                'metric1': '20',
-                'metric2': '10000',
-                'ospf_type': 'E2',
-                'pref': '150',
-                'prefix': 'fec0:20::/64',
-                'proto': 'ospf6',
-                'router_id': '172.16.10.1',
-                'since': since_field(),
-                'tag': None,
-                'type': ['OSPF-E2', 'univ'],
-                'nexthops': [{
-                    'gateway': 'fe80::8c84:28ff:fe6c:40ae',
-                    'interface': 'eth0',
-                    'mpls': None,
-                    'onlink': None,
-                    'weight': None
-                }]
-            },
-            {
-                'metric1': '20',
-                'metric2': '10000',
-                'ospf_type': 'E2',
-                'pref': '150',
-                'prefix': 'fec0:10::/64',
-                'proto': 'ospf6',
-                'router_id': '172.16.10.1',
-                'since': since_field(),
-                'tag': None,
-                'type': ['OSPF-E2', 'univ'],
-                'nexthops': [{
-                    'gateway': 'fe80::8c84:28ff:fe6c:40ae',
-                    'interface': 'eth0',
-                    'mpls': None,
-                    'onlink': None,
-                    'weight': None
-                }]
-            },
-            {
-                'metric1': '20',
-                'metric2': None,
-                'ospf_type': 'I',
-                'pref': '150',
-                'prefix': 'fec0::/64',
-                'proto': 'ospf6',
-                'router_id': '172.16.10.1',
-                'since': since_field(),
-                'tag': None,
-                'type': ['OSPF', 'univ'],
-                'nexthops': [{
-                    'gateway': 'fe80::8c84:28ff:fe6c:40ae',
-                    'interface': 'eth0',
-                    'mpls': None,
-                    'onlink': None,
-                    'weight': None
-                }]
-            },
-            {
-                'metric1': '30',
-                'metric2': None,
-                'ospf_type': 'I',
-                'pref': '150',
-                'prefix': 'fefe::/64',
-                'proto': 'ospf6',
-                'router_id': '172.16.10.1',
-                'since': since_field(),
-                'tag': None,
-                'type': ['OSPF', 'univ'],
-                'nexthops': [{
-                    'gateway': 'fe80::8c84:28ff:fe6c:40ae',
-                    'interface': 'eth0',
-                    'mpls': None,
-                    'onlink': None,
-                    'weight': None
-                }]
-            },
-            {
-                'metric1': '10',
-                'metric2': None,
-                'ospf_type': 'I',
-                'pref': '150',
-                'prefix': 'fec0:1::/64',
-                'proto': 'ospf6',
-                'router_id': '0.0.0.3',
-                'since': since_field(),
-                'tag': None,
-                'type': ['OSPF', 'univ'],
-                'nexthops': [{
-                    'interface': 'eth0',
-                    'mpls': None,
-                    'onlink': None,
-                    'weight': None
-                }]
-            },
-            {
-                'metric1': '30',
-                'metric2': '10000',
-                'ospf_type': 'E2',
-                'pref': '150',
-                'prefix': 'fefe:1::/64',
-                'proto': 'ospf6',
-                'router_id': '172.16.10.1',
-                'since': since_field(),
-                'tag': None,
-                'type': ['OSPF-E2', 'univ'],
-                'nexthops': [{
-                    'gateway': 'fe80::8c84:28ff:fe6c:40ae',
-                    'interface': 'eth0',
-                    'mpls': None,
-                    'onlink': None,
-                    'weight': None
-                }]
-            }
+        ]
+
+        assert result == correct_result, 'The show_route_table() result does not match what it should be'
+
+    def test_show_route_table_t_bgp4(self):
+        """Test show_route_table."""
+
+        birdclient = BirdClient()
+        result = birdclient.show_route_table('t_bgp4', self._load_file('test_show_route_table_t_bgp4.txt'))
+
+        correct_result = [
+        ]
+
+        assert result == correct_result, 'The show_route_table() result does not match what it should be'
+
+    def test_show_route_table_t_bgp6(self):
+        """Test show_route_table."""
+
+        birdclient = BirdClient()
+        result = birdclient.show_route_table('t_bgp6', self._load_file('test_show_route_table_t_bgp6.txt'))
+
+        correct_result = [
         ]
 
         assert result == correct_result, 'The show_route_table() result does not match what it should be'
