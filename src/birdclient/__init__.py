@@ -24,7 +24,7 @@ import re
 import socket
 from typing import Any, Dict, List, Optional
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 
 class BirdClientParseError(RuntimeError):
@@ -197,7 +197,7 @@ class BirdClient:
                 #
                 # Grab a "normal" route
                 #
-                match = re.match(r'^(?P<prefix_type>(?:unicast))\s+'
+                match = re.match(r'^(?P<prefix_type>[a-z]+) '
                                  r'\[(?P<protocol>\S+)\s+'
                                  r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\] '
                                  r'(?:(?P<bestpath>\*) )?'
@@ -215,7 +215,7 @@ class BirdClient:
                 #
                 # Grab a BGP route
                 #
-                match = re.match(r'^(?P<prefix_type>(?:unicast)) '
+                match = re.match(r'^(?P<prefix_type>[a-z]+) '
                                  r'\['
                                  r'(?P<protocol>\S+) '
                                  r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})'
@@ -260,7 +260,7 @@ class BirdClient:
                 #
                 # Grab a OSPF route
                 #
-                match = re.match(r'^(?P<prefix_type>(?:unicast))\s+'
+                match = re.match(r'^(?P<prefix_type>[a-z]+) '
                                  r'\[(?P<protocol>\S+)\s+'
                                  r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\] '
                                  r'(?P<ospf_type>(?:I|IA|E1|E2)) '
@@ -291,9 +291,7 @@ class BirdClient:
                 #
                 # Grab a RIP route
                 #
-                # unicast [rip6 2019-10-01 17:59:41] (120/3)
-
-                match = re.match(r'^(?P<prefix_type>(?:unicast))\s+'
+                match = re.match(r'^(?P<prefix_type>[a-z]+) '
                                  r'\[(?P<protocol>\S+)\s+'
                                  r'(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\] '
                                  r'\((?P<pref>\d+)/(?P<metric1>\d+)\)$', line)
