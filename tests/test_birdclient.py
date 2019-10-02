@@ -465,6 +465,26 @@ class TestBirdClient():
 
         assert result == correct_result, 'The show_route_table() result does not match what it should be'
 
+    def test_show_route_table_t_bgp4_with_blackhole(self):
+        """Test show_route_table."""
+
+        birdclient = BirdClient()
+        result = birdclient.show_route_table('t_bgp4', self._load_file('test_show_route_table_t_bgp4_with_blackhole.txt'))
+
+        correct_result = {
+            '100.64.11.0/24': [{'attributes': {'BGP.large_community': [('65000',
+                                                                        '3',
+                                                                        '1')],
+                                               'BGP.local_pref': '930'},
+                                'pref': '200',
+                                'prefix_type': 'blackhole',
+                                'protocol': 'bgp_originate4',
+                                'since': '2019-10-02 11:29:38',
+                                'type': ['static', 'univ']}]
+        }
+
+        assert result == correct_result, 'The show_route_table() result does not match what it should be'
+
     def test_show_route_table_t_bgp6(self):
         """Test show_route_table."""
 

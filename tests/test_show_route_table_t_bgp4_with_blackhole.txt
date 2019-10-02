@@ -1,0 +1,6 @@
+0001 BIRD 2.0.4 ready.
+1007-100.64.11.0/24       blackhole [bgp_originate4 2019-10-02 11:29:38] * (200)
+1008-	Type: static univ
+1012-	BGP.local_pref: 930
+ 	BGP.large_community: (65000, 3, 1)
+0000
