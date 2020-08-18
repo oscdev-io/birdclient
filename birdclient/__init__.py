@@ -30,7 +30,12 @@ __VERSION__ = "0.0.4"
 # Regex matches
 _SINCE_MATCH = r"(?P<since>(?:[0-9]{4}-[0-9]{2}-[0-9]{2} )?[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,3})?)"
 
-class BirdClientParseError(RuntimeError):
+
+class BirdClientError(RuntimeError):
+    """Exception for our BIRD client."""
+
+
+class BirdClientParseError(BirdClientError):
     """Exception for parsing errors."""
 
 
