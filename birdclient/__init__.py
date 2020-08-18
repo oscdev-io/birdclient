@@ -20,6 +20,7 @@
 
 """BIRD client class."""
 
+import os
 import re
 import socket
 from typing import Any, Dict, List, Optional
@@ -471,6 +472,11 @@ class BirdClient:
 
         # Create a unix socket
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+
+        # Make sure bird socket exists first...
+        if not os.path.exists(self._socket_file):
+            raise BirdClientError(f"BIRD socket '{self._socket_file}' does not exist")
+
         # Connect to the BIRD daemon
         sock.connect(self._socket_file)
 
