@@ -3,11 +3,11 @@
 import re
 from setuptools import find_packages, setup
 
-main_py = open('src/birdclient/__init__.py').read()
-metadata = dict(re.findall("__([a-z]+)__ = '([^']+)'", main_py))
+main_py = open('birdclient/__init__.py').read()
+metadata = dict(re.findall("__([A-Z]+)__ = ['\"]([^\"']+)['\"]", main_py))
 
 NAME = 'birdclient'
-VERSION = metadata['version']
+VERSION = metadata['VERSION']
 
 with open("README.md", "r") as fh:
     LONG_DESCRIPTION = fh.read()
@@ -31,7 +31,6 @@ setup(
     ],
     python_requires='>=3.6',
 
-    packages=find_packages('src', exclude=['tests']),
-    package_dir={'': 'src'},
+    packages=find_packages(),
     package_data={'': ['LICENSE']}
 )

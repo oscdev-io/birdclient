@@ -25,7 +25,7 @@ import re
 import socket
 from typing import Any, Dict, List, Optional
 
-__version__ = "0.0.4"
+__VERSION__ = "0.0.4"
 
 # Regex matches
 _SINCE_MATCH = r"(?P<since>(?:[0-9]{4}-[0-9]{2}-[0-9]{2} )?[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,3})?)"
