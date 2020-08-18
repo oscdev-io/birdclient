@@ -27,6 +27,8 @@ from typing import Any, Dict, List, Optional
 
 __version__ = "0.0.4"
 
+# Regex matches
+_SINCE_MATCH = r"(?P<since>(?:[0-9]{4}-[0-9]{2}-[0-9]{2} )?[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,3})?)"
 
 class BirdClientParseError(RuntimeError):
     """Exception for parsing errors."""
@@ -107,7 +109,7 @@ class BirdClient:
                 r"(?P<proto>\S+)\s+"
                 r"(?P<table>\S+)\s+"
                 r"(?P<state>\S+)\s+"
-                r"(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\s+"
+                + _SINCE_MATCH + r"\s+"
                 r"(?P<info>.*)",
                 line,
             )
@@ -176,7 +178,7 @@ class BirdClient:
                     r"^\s*(?P<prefix>[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2})\s+(?P<line>.+)$", line,
                 )
                 if match:
-                    # If we had sources, save them
+                    # If we had sources from a previous route, save them
                     if sources:
                         res[prefix] = sources
                     sources = []
@@ -202,8 +204,7 @@ class BirdClient:
                 #
                 match = re.match(
                     r"^(?P<prefix_type>[a-z]+) "
-                    r"\[(?P<protocol>\S+)\s+"
-                    r"(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\] "
+                    r"\[(?P<protocol>\S+) " + _SINCE_MATCH + r"\] "
                     r"(?:(?P<bestpath>\*) )?"
                     r"\((?P<pref>\d+)\)$",
                     line,
@@ -224,8 +225,7 @@ class BirdClient:
                 match = re.match(
                     r"^(?P<prefix_type>[a-z]+) "
                     r"\["
-                    r"(?P<protocol>\S+) "
-                    r"(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})"
+                    r"(?P<protocol>\S+) " + _SINCE_MATCH +
                     r"(?: from (?P<from>[a-z0-9\.:]+))?"
                     r"\] "
                     r"(?:(?P<bestpath>\*) )?"
@@ -271,8 +271,7 @@ class BirdClient:
                 #
                 match = re.match(
                     r"^(?P<prefix_type>[a-z]+) "
-                    r"\[(?P<protocol>\S+)\s+"
-                    r"(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\] "
+                    r"\[(?P<protocol>\S+)\s+" + _SINCE_MATCH + r"\] "
                     r"(?P<ospf_type>(?:I|IA|E1|E2)) "
                     r"\((?P<pref>\d+)/(?P<metric1>\d+)(?:/(?P<metric2>\d+))?\)"
                     r"(?: \[(?P<tag>[0-9a-f]+)\])?"
@@ -305,8 +304,7 @@ class BirdClient:
                 #
                 match = re.match(
                     r"^(?P<prefix_type>[a-z]+) "
-                    r"\[(?P<protocol>\S+)\s+"
-                    r"(?P<since>[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\] "
+                    r"\[(?P<protocol>\S+)\s+" + _SINCE_MATCH + r"\] "
                     r"\((?P<pref>\d+)/(?P<metric1>\d+)\)$",
                     line,
                 )
