@@ -465,8 +465,12 @@ class BirdClient:
                 source["attributes"][attrib] = value
                 continue
 
+            # Check for errors
+            if code.startswith("8") or code.startswith("9"):
+                raise BirdClientError(f"BIRD client error: {line}")
+
             # If we didn't match the line, we need to raise an exception
-            raise BirdClientParseError(f"Failed to parse line: {line}")
+            raise BirdClientParseError(f"Failed to parse BIRD output: {line}")
 
         return res
 
