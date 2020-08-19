@@ -27,19 +27,12 @@ import os
 import re
 import socket
 from typing import Any, Dict, List, Optional
+from .exceptions import BirdClientError, BirdClientParseError
 
 __VERSION__ = "0.0.4"
 
 # Regex matches
 _SINCE_MATCH = r"(?P<since>(?:[0-9]{4}-[0-9]{2}-[0-9]{2} )?[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,3})?)"
-
-
-class BirdClientError(RuntimeError):
-    """Exception for our BIRD client."""
-
-
-class BirdClientParseError(BirdClientError):
-    """Exception for parsing errors."""
 
 
 class BirdClient:
