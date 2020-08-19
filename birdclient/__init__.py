@@ -109,8 +109,7 @@ class BirdClient:
                 r"(?P<name>\S+)\s+"
                 r"(?P<proto>\S+)\s+"
                 r"(?P<table>\S+)\s+"
-                r"(?P<state>\S+)\s+"
-                + _SINCE_MATCH + r"\s+"
+                r"(?P<state>\S+)\s+" + _SINCE_MATCH + r"\s+"
                 r"(?P<info>.*)",
                 line,
             )
@@ -226,8 +225,7 @@ class BirdClient:
                 match = re.match(
                     r"^(?P<prefix_type>[a-z]+) "
                     r"\["
-                    r"(?P<protocol>\S+) " + _SINCE_MATCH +
-                    r"(?: from (?P<from>[a-z0-9\.:]+))?"
+                    r"(?P<protocol>\S+) " + _SINCE_MATCH + r"(?: from (?P<from>[a-z0-9\.:]+))?"
                     r"\] "
                     r"(?:(?P<bestpath>\*) )?"
                     r"\((?P<pref>\d+)(?:/(?P<metric>\d+))?\) "
