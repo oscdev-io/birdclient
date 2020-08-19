@@ -55,7 +55,7 @@ class BirdClient:
         """Return parsed BIRD status."""
 
         # Grab status
-        if not data:
+        if not data:  # pragma: no cover
             data = self.query("show status")
 
         # Return structure
@@ -96,7 +96,7 @@ class BirdClient:
         """Return parsed BIRD protocols."""
 
         # Grab protocols
-        if not data:
+        if not data:  # pragma: no cover
             data = self.query("show protocols")
 
         res = {}
@@ -131,7 +131,7 @@ class BirdClient:
         """Return parsed BIRD routing table."""
 
         # Grab routes
-        if not data:
+        if not data:  # pragma: no cover
             data = self.query(f"show route table {table} all")
 
         res: Dict[str, Any] = {}
@@ -468,7 +468,7 @@ class BirdClient:
 
         return res
 
-    def query(self, query: str) -> List[str]:
+    def query(self, query: str) -> List[str]:  # pragma: no cover
         """Open a socket to the BIRD daemon, send the query and get the response."""
 
         # Create a unix socket
