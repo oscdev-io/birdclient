@@ -11,6 +11,7 @@ stages:
 
 test_job:
   stage: test
+  coverage: '/^TOTAL.+?(\d+\%)$/'
   script:
   # Create environment
   - pacman -Syu --noconfirm
