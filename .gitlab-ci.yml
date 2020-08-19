@@ -19,11 +19,6 @@ test_job:
   - pacman -S --noconfirm python-pytest-runner python-pytest-cov python-pytest-black python-pytest-flake8 python-pytest-pycodestyle python-pytest-pydocstyle python-pytest-pylint python-pytest-mypy
   # Run tests
   - python setup.py test
-  # Artifacts
-  artifacts:
-    expire_in: 1 day
-    paths:
-    - build/
 
 prepare_release:
   stage: prepare_release
@@ -39,10 +34,6 @@ prepare_release:
   # Output description file
   - echo "Automatic release based on tag $CI_COMMIT_TAG" > build/description.txt
   - git log --oneline --decorate --no-merges $COMMIT_RANGE >> build/description.txt
-  artifacts:
-    expire_in: 1 day
-    paths:
-    - build/
 
 release:
   stage: release
