@@ -34,6 +34,10 @@ prepare_release:
   # Output description file
   - echo "Automatic release based on tag $CI_COMMIT_TAG" > build/description.txt
   - git log --oneline --decorate --no-merges $COMMIT_RANGE >> build/description.txt
+  artifacts:
+    expire_in: 1 day
+    paths:
+    - build/
 
 release:
   stage: release
