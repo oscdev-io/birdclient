@@ -1,5 +1,5 @@
-[![pipeline status](https://gitlab.devlabs.linuxassist.net/allworldit/python/birdclient/badges/master/pipeline.svg)](https://gitlab.devlabs.linuxassist.net/allworldit/python/birdclient/commits/master)
-[![coverage report](https://gitlab.devlabs.linuxassist.net/allworldit/python/birdclient/badges/master/coverage.svg)](https://gitlab.devlabs.linuxassist.net/allworldit/python/birdclient/commits/master)
+[![pipeline status](https://oscdev.io/software/birdclient/badges/master/pipeline.svg)](https://oscdev.io/software/birdclient/commits/master)
+[![coverage report](https://oscdev.io/software/birdclient/badges/master/coverage.svg)](https://oscdev.io/software/birdclient/commits/master)
 
 # Python BIRD Client
 

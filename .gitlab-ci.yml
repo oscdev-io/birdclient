@@ -1,7 +1,8 @@
 image: idmslinux/rolling
 
 include:
-  - template: 'Workflows/MergeRequest-Pipelines.gitlab-ci.yml'
+  - template: Workflows/MergeRequest-Pipelines.gitlab-ci.yml
+  - template: Code-Quality.gitlab-ci.yml
 
 # Stages we need to progress through
 stages:
