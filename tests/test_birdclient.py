@@ -133,7 +133,7 @@ class TestBirdClient:
             "10.0.1.0/24": [
                 {
                     "nexthops": [{"gateway": "192.168.0.4", "interface": "eth0"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static4",
                     "since": "2019-09-01 13:36:14",
@@ -143,7 +143,7 @@ class TestBirdClient:
             "10.0.2.0/24": [
                 {
                     "nexthops": [{"gateway": "192.168.0.5", "interface": "eth0"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static4",
                     "since": "2019-09-01 13:36:14",
@@ -164,7 +164,7 @@ class TestBirdClient:
             "fec0:10::/64": [
                 {
                     "nexthops": [{"gateway": "fec0::4", "interface": "eth0"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static6",
                     "since": "2019-09-01 13:36:14",
@@ -174,7 +174,7 @@ class TestBirdClient:
             "fec0:20::/64": [
                 {
                     "nexthops": [{"gateway": "fec0::5", "interface": "eth0"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static6",
                     "since": "2019-09-01 13:36:14",
@@ -195,7 +195,7 @@ class TestBirdClient:
             "10.0.1.0/24": [
                 {
                     "nexthops": [{"gateway": "192.168.0.4", "interface": "eth0"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static4",
                     "since": "2019-09-01 13:36:14",
@@ -205,7 +205,7 @@ class TestBirdClient:
             "10.0.2.0/24": [
                 {
                     "nexthops": [{"gateway": "192.168.0.5", "interface": "eth0"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static4",
                     "since": "2019-09-01 13:36:14",
@@ -215,7 +215,7 @@ class TestBirdClient:
             "172.16.100.0/24": [
                 {
                     "nexthops": [{"gateway": "172.16.10.10", "interface": "eth9"}],
-                    "pref": "10",
+                    "pref": 10,
                     "prefix_type": "unicast",
                     "protocol": "kernel4",
                     "since": "2019-09-01 13:36:14",
@@ -236,7 +236,7 @@ class TestBirdClient:
             "fec0:10::/64": [
                 {
                     "nexthops": [{"gateway": "fec0::4", "interface": "eth0"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static6",
                     "since": "2019-09-01 13:36:14",
@@ -246,7 +246,7 @@ class TestBirdClient:
             "fec0:20::/64": [
                 {
                     "nexthops": [{"gateway": "fec0::5", "interface": "eth0"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static6",
                     "since": "2019-09-01 13:36:14",
@@ -267,7 +267,7 @@ class TestBirdClient:
             "10.0.1.0/24": [
                 {
                     "nexthops": [{"gateway": "192.168.0.4", "interface": "eth0"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static4",
                     "since": "2019-09-01 13:36:14",
@@ -277,7 +277,7 @@ class TestBirdClient:
             "10.0.2.0/24": [
                 {
                     "nexthops": [{"gateway": "192.168.0.5", "interface": "eth0"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static4",
                     "since": "2019-09-01 13:36:14",
@@ -286,11 +286,11 @@ class TestBirdClient:
             ],
             "100.64.43.2/31": [
                 {
-                    "attributes": {"OSPF.metric1": "20", "OSPF.router_id": "100.64.20.1"},
-                    "metric1": "20",
+                    "attributes": {"OSPF.metric1": 20, "OSPF.router_id": "100.64.20.1"},
+                    "metric1": 20,
                     "nexthops": [{"gateway": "100.64.20.1", "interface": "eth0"}],
                     "ospf_type": "I",
-                    "pref": "150",
+                    "pref": 150,
                     "prefix_type": "unicast",
                     "protocol": "ospf4",
                     "router_id": "100.64.20.1",
@@ -300,14 +300,14 @@ class TestBirdClient:
             ],
             "100.64.50.2/31": [
                 {
-                    "attributes": {"OSPF.metric1": "40", "OSPF.router_id": "100.64.10.2"},
-                    "metric1": "40",
+                    "attributes": {"OSPF.metric1": 40, "OSPF.router_id": "100.64.10.2"},
+                    "metric1": 40,
                     "nexthops": [
-                        {"gateway": "100.64.20.1", "interface": "eth0", "weight": "1"},
-                        {"gateway": "100.64.20.5", "interface": "eth0", "weight": "1"},
+                        {"gateway": "100.64.20.1", "interface": "eth0", "weight": 1},
+                        {"gateway": "100.64.20.5", "interface": "eth0", "weight": 1},
                     ],
                     "ospf_type": "I",
-                    "pref": "150",
+                    "pref": 150,
                     "prefix_type": "unicast",
                     "protocol": "ospf4",
                     "router_id": "100.64.10.2",
@@ -318,19 +318,19 @@ class TestBirdClient:
             "100.90.0.0/28": [
                 {
                     "attributes": {
-                        "OSPF.metric1": "40",
-                        "OSPF.metric2": "10000",
+                        "OSPF.metric1": 40,
+                        "OSPF.metric2": 10000,
                         "OSPF.router_id": "100.64.10.2",
                         "OSPF.tag": "0x00000000",
                     },
-                    "metric1": "40",
-                    "metric2": "10000",
+                    "metric1": 40,
+                    "metric2": 10000,
                     "nexthops": [
-                        {"gateway": "100.64.20.1", "interface": "eth0", "weight": "1"},
-                        {"gateway": "100.64.20.5", "interface": "eth0", "weight": "1"},
+                        {"gateway": "100.64.20.1", "interface": "eth0", "weight": 1},
+                        {"gateway": "100.64.20.5", "interface": "eth0", "weight": 1},
                     ],
                     "ospf_type": "E2",
-                    "pref": "150",
+                    "pref": 150,
                     "prefix_type": "unicast",
                     "protocol": "ospf4",
                     "router_id": "100.64.10.2",
@@ -341,7 +341,7 @@ class TestBirdClient:
             "172.16.100.0/24": [
                 {
                     "nexthops": [{"gateway": "172.16.10.10", "interface": "eth9"}],
-                    "pref": "10",
+                    "pref": 10,
                     "prefix_type": "unicast",
                     "protocol": "kernel4",
                     "since": "2019-09-01 13:36:14",
@@ -362,7 +362,7 @@ class TestBirdClient:
             "fec0:10::/64": [
                 {
                     "nexthops": [{"gateway": "fec0::4", "interface": "eth0"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static6",
                     "since": "2019-09-01 13:36:14",
@@ -372,7 +372,7 @@ class TestBirdClient:
             "fec0:20::/64": [
                 {
                     "nexthops": [{"gateway": "fec0::5", "interface": "eth0"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static6",
                     "since": "2019-09-01 13:36:14",
@@ -393,19 +393,19 @@ class TestBirdClient:
             "fc00:90::/64": [
                 {
                     "attributes": {
-                        "OSPF.metric1": "40",
-                        "OSPF.metric2": "10000",
+                        "OSPF.metric1": 40,
+                        "OSPF.metric2": 10000,
                         "OSPF.router_id": "100.64.10.2",
                         "OSPF.tag": "0x00000000",
                     },
-                    "metric1": "40",
-                    "metric2": "10000",
+                    "metric1": 40,
+                    "metric2": 10000,
                     "nexthops": [
-                        {"gateway": "fe80::20:1ff:fe00:1", "interface": "eth0", "weight": "1"},
-                        {"gateway": "fe80::20:1ff:fe02:1", "interface": "eth0", "weight": "1"},
+                        {"gateway": "fe80::20:1ff:fe00:1", "interface": "eth0", "weight": 1},
+                        {"gateway": "fe80::20:1ff:fe02:1", "interface": "eth0", "weight": 1},
                     ],
                     "ospf_type": "E2",
-                    "pref": "150",
+                    "pref": 150,
                     "prefix_type": "unicast",
                     "protocol": "ospf6",
                     "router_id": "100.64.10.2",
@@ -415,14 +415,14 @@ class TestBirdClient:
             ],
             "fc50::2/127": [
                 {
-                    "attributes": {"OSPF.metric1": "40", "OSPF.router_id": "100.64.10.2"},
-                    "metric1": "40",
+                    "attributes": {"OSPF.metric1": 40, "OSPF.router_id": "100.64.10.2"},
+                    "metric1": 40,
                     "nexthops": [
-                        {"gateway": "fe80::20:1ff:fe00:1", "interface": "eth0", "weight": "1"},
-                        {"gateway": "fe80::20:1ff:fe02:1", "interface": "eth0", "weight": "1"},
+                        {"gateway": "fe80::20:1ff:fe00:1", "interface": "eth0", "weight": 1},
+                        {"gateway": "fe80::20:1ff:fe02:1", "interface": "eth0", "weight": 1},
                     ],
                     "ospf_type": "I",
-                    "pref": "150",
+                    "pref": 150,
                     "prefix_type": "unicast",
                     "protocol": "ospf6",
                     "router_id": "100.64.10.2",
@@ -432,11 +432,11 @@ class TestBirdClient:
             ],
             "fec0:20::/64": [
                 {
-                    "metric1": "20",
-                    "metric2": "10000",
+                    "metric1": 20,
+                    "metric2": 10000,
                     "nexthops": [{"gateway": "fe80::8c84:28ff:fe6c:40ae", "interface": "eth0"}],
                     "ospf_type": "E2",
-                    "pref": "150",
+                    "pref": 150,
                     "prefix_type": "unicast",
                     "protocol": "ospf6",
                     "router_id": "172.16.10.1",
@@ -446,10 +446,10 @@ class TestBirdClient:
             ],
             "fec0::/64": [
                 {
-                    "metric1": "20",
+                    "metric1": 20,
                     "nexthops": [{"gateway": "fe80::8c84:28ff:fe6c:40ae", "interface": "eth0"}],
                     "ospf_type": "I",
-                    "pref": "150",
+                    "pref": 150,
                     "prefix_type": "unicast",
                     "protocol": "ospf6",
                     "router_id": "172.16.10.1",
@@ -472,15 +472,15 @@ class TestBirdClient:
                 {
                     "asn": "AS65001",
                     "attributes": {
-                        "BGP.as_path": "65001",
+                        "BGP.as_path": [65001],
                         "BGP.cluster_list": "0.0.0.1",
                         "BGP.large_community": [
-                            ("65000", "1", "900"),
-                            ("65000", "3", "2"),
-                            ("65000", "4", "65004"),
-                            ("65001", "3", "1"),
+                            (65000, 1, 900),
+                            (65000, 3, 2),
+                            (65000, 4, 65004),
+                            (65001, 3, 1),
                         ],
-                        "BGP.local_pref": "750",
+                        "BGP.local_pref": 750,
                         "BGP.next_hop": "100.64.50.3",
                         "BGP.origin": "IGP",
                         "BGP.originator_id": "100.64.10.2",
@@ -489,10 +489,10 @@ class TestBirdClient:
                     "bgp_type": "i",
                     "from": "100.64.10.3",
                     "nexthops": [
-                        {"gateway": "100.64.20.1", "interface": "eth0", "weight": "1"},
-                        {"gateway": "100.64.20.5", "interface": "eth0", "weight": "1"},
+                        {"gateway": "100.64.20.1", "interface": "eth0", "weight": 1},
+                        {"gateway": "100.64.20.5", "interface": "eth0", "weight": 1},
                     ],
-                    "pref": "100",
+                    "pref": 100,
                     "prefix_type": "unicast",
                     "protocol": "bgp_AS65000_rr1_peer4",
                     "since": "2019-09-30 17:14:14",
@@ -503,10 +503,10 @@ class TestBirdClient:
                 {
                     "asn": "AS65006",
                     "attributes": {
-                        "BGP.as_path": "65006",
+                        "BGP.as_path": [65006],
                         "BGP.cluster_list": "0.0.0.1",
-                        "BGP.large_community": [("65000", "3", "3"), ("65006", "3", "1")],
-                        "BGP.local_pref": "450",
+                        "BGP.large_community": [(65000, 3, 3), (65006, 3, 1)],
+                        "BGP.local_pref": 450,
                         "BGP.next_hop": "100.64.40.11",
                         "BGP.origin": "IGP",
                         "BGP.originator_id": "100.64.10.1",
@@ -515,10 +515,10 @@ class TestBirdClient:
                     "bgp_type": "i",
                     "from": "100.64.10.3",
                     "nexthops": [
-                        {"gateway": "100.64.20.1", "interface": "eth0", "weight": "1"},
-                        {"gateway": "100.64.20.5", "interface": "eth0", "weight": "1"},
+                        {"gateway": "100.64.20.1", "interface": "eth0", "weight": 1},
+                        {"gateway": "100.64.20.5", "interface": "eth0", "weight": 1},
                     ],
-                    "pref": "100",
+                    "pref": 100,
                     "prefix_type": "unicast",
                     "protocol": "bgp_AS65000_rr1_peer4",
                     "since": "2019-09-30 17:14:14",
@@ -527,10 +527,10 @@ class TestBirdClient:
                 {
                     "asn": "AS65004",
                     "attributes": {
-                        "BGP.as_path": "65004",
+                        "BGP.as_path": [65004],
                         "BGP.cluster_list": "0.0.0.1",
-                        "BGP.large_community": [("65000", "3", "4"), ("65004", "3", "1")],
-                        "BGP.local_pref": "150",
+                        "BGP.large_community": [(65000, 3, 4), (65004, 3, 1)],
+                        "BGP.local_pref": 150,
                         "BGP.next_hop": "100.64.43.2",
                         "BGP.origin": "IGP",
                         "BGP.originator_id": "100.64.20.1",
@@ -539,7 +539,7 @@ class TestBirdClient:
                     "bgp_type": "i",
                     "from": "100.64.20.3",
                     "nexthops": [{"gateway": "100.64.20.1", "interface": "eth0"}],
-                    "pref": "100",
+                    "pref": 100,
                     "prefix_type": "unicast",
                     "protocol": "bgp_AS65000_rr2_peer4",
                     "since": "2019-09-30 17:14:09",
@@ -559,8 +559,8 @@ class TestBirdClient:
         correct_result = {
             "100.64.11.0/24": [
                 {
-                    "attributes": {"BGP.large_community": [("65000", "3", "1")], "BGP.local_pref": "930"},
-                    "pref": "200",
+                    "attributes": {"BGP.large_community": [(65000, 3, 1)], "BGP.local_pref": 930},
+                    "pref": 200,
                     "prefix_type": "blackhole",
                     "protocol": "bgp_originate4",
                     "since": "2019-10-02 11:29:38",
@@ -582,21 +582,21 @@ class TestBirdClient:
                 {
                     "asn": "AS65007",
                     "attributes": {
-                        "BGP.as_path": "65007",
+                        "BGP.as_path": [65007],
                         "BGP.large_community": [
-                            ("65000", "4", "65414"),
-                            ("65007", "3", "1"),
-                            ("65000", "3", "2"),
-                            ("65000", "1", "901"),
+                            (65000, 4, 65414),
+                            (65007, 3, 1),
+                            (65000, 3, 2),
+                            (65000, 1, 901),
                         ],
-                        "BGP.local_pref": "750",
+                        "BGP.local_pref": 750,
                         "BGP.next_hop": "fc61::3 " "fe80::61:1ff:fe00:1",
                         "BGP.origin": "IGP",
                     },
                     "bestpath": True,
                     "bgp_type": "i",
                     "nexthops": [{"gateway": "fc61::3", "interface": "eth1"}],
-                    "pref": "100",
+                    "pref": 100,
                     "prefix_type": "unicast",
                     "protocol": "bgp_AS65007_client3_peer6",
                     "since": "2019-09-30 17:14:00",
@@ -604,10 +604,10 @@ class TestBirdClient:
                 },
                 {
                     "attributes": {
-                        "BGP.as_path": "",
+                        "BGP.as_path": [],
                         "BGP.cluster_list": "0.0.0.1",
-                        "BGP.large_community": [("65000", "3", "1")],
-                        "BGP.local_pref": "940",
+                        "BGP.large_community": [(65000, 3, 1)],
+                        "BGP.local_pref": 940,
                         "BGP.next_hop": "fc50::5",
                         "BGP.origin": "IGP",
                         "BGP.originator_id": "100.64.10.2",
@@ -616,10 +616,10 @@ class TestBirdClient:
                     "bgp_type": "i",
                     "from": "fc20::3",
                     "nexthops": [
-                        {"gateway": "fe80::20:1ff:fe00:1", "interface": "eth0", "weight": "1"},
-                        {"gateway": "fe80::20:1ff:fe02:1", "interface": "eth0", "weight": "1"},
+                        {"gateway": "fe80::20:1ff:fe00:1", "interface": "eth0", "weight": 1},
+                        {"gateway": "fe80::20:1ff:fe02:1", "interface": "eth0", "weight": 1},
                     ],
-                    "pref": "100",
+                    "pref": 100,
                     "prefix_type": "unicast",
                     "protocol": "bgp_AS65000_rr2_peer6",
                     "since": "2019-09-30 17:14:20",
@@ -629,10 +629,10 @@ class TestBirdClient:
             "fc20::/64": [
                 {
                     "attributes": {
-                        "BGP.as_path": "",
+                        "BGP.as_path": [],
                         "BGP.cluster_list": "0.0.0.1",
-                        "BGP.large_community": [("65000", "3", "1")],
-                        "BGP.local_pref": "930",
+                        "BGP.large_community": [(65000, 3, 1)],
+                        "BGP.local_pref": 930,
                         "BGP.next_hop": "fc20::1",
                         "BGP.origin": "IGP",
                         "BGP.originator_id": "100.64.20.1",
@@ -641,7 +641,7 @@ class TestBirdClient:
                     "bgp_type": "i",
                     "from": "fc10::3",
                     "nexthops": [{"gateway": "fc20::1", "interface": "eth0"}],
-                    "pref": "100",
+                    "pref": 100,
                     "prefix_type": "unicast",
                     "protocol": "bgp_AS65000_rr1_peer6",
                     "since": "2019-09-30 17:14:15",
@@ -650,10 +650,10 @@ class TestBirdClient:
                 {
                     "asn": "AS65006",
                     "attributes": {
-                        "BGP.as_path": "65006",
+                        "BGP.as_path": [65006],
                         "BGP.cluster_list": "0.0.0.1",
-                        "BGP.large_community": [("65000", "3", "3"), ("65006", "3", "1")],
-                        "BGP.local_pref": "450",
+                        "BGP.large_community": [(65000, 3, 3), (65006, 3, 1)],
+                        "BGP.local_pref": 450,
                         "BGP.next_hop": "fc40::11 fe80::40:1ff:fe00:1",
                         "BGP.origin": "IGP",
                         "BGP.originator_id": "100.64.10.1",
@@ -662,10 +662,10 @@ class TestBirdClient:
                     "bgp_type": "i",
                     "from": "fc20::3",
                     "nexthops": [
-                        {"gateway": "fe80::20:1ff:fe00:1", "interface": "eth0", "weight": "1"},
-                        {"gateway": "fe80::20:1ff:fe02:1", "interface": "eth0", "weight": "1"},
+                        {"gateway": "fe80::20:1ff:fe00:1", "interface": "eth0", "weight": 1},
+                        {"gateway": "fe80::20:1ff:fe02:1", "interface": "eth0", "weight": 1},
                     ],
-                    "pref": "100",
+                    "pref": 100,
                     "prefix_type": "unicast",
                     "protocol": "bgp_AS65000_rr2_peer6",
                     "since": "2019-09-30 17:14:14",
@@ -685,9 +685,9 @@ class TestBirdClient:
         correct_result = {
             "192.168.10.0/24": [
                 {
-                    "metric1": "3",
+                    "metric1": 3,
                     "nexthops": [{"gateway": "192.168.0.1", "interface": "eth0"}],
-                    "pref": "120",
+                    "pref": 120,
                     "prefix_type": "unicast",
                     "protocol": "rip4",
                     "since": "2019-10-01 17:59:41",
@@ -696,7 +696,7 @@ class TestBirdClient:
             "192.168.21.0/24": [
                 {
                     "nexthops": [{"gateway": "192.168.20.3", "interface": "eth1"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static4",
                     "since": "2019-10-01 17:59:38",
@@ -715,9 +715,9 @@ class TestBirdClient:
         correct_result = {
             "fc10::/64": [
                 {
-                    "metric1": "3",
+                    "metric1": 3,
                     "nexthops": [{"gateway": "fe80::1:ff:fe00:1", "interface": "eth0"}],
-                    "pref": "120",
+                    "pref": 120,
                     "prefix_type": "unicast",
                     "protocol": "rip6",
                     "since": "2019-10-01 17:59:42",
@@ -726,7 +726,7 @@ class TestBirdClient:
             "fc21::/64": [
                 {
                     "nexthops": [{"gateway": "fc20::3", "interface": "eth1"}],
-                    "pref": "200",
+                    "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static6",
                     "since": "2019-10-01 17:59:38",
@@ -746,7 +746,7 @@ class TestBirdClient:
             "192.168.10.0/24": [
                 {
                     "nexthops": [{"interface": "eth1"}],
-                    "pref": "240",
+                    "pref": 240,
                     "prefix_type": "unicast",
                     "protocol": "direct4_rip",
                     "since": "2019-10-01 18:42:53",
@@ -766,7 +766,7 @@ class TestBirdClient:
             "fc10::/64": [
                 {
                     "nexthops": [{"interface": "eth1"}],
-                    "pref": "240",
+                    "pref": 240,
                     "prefix_type": "unicast",
                     "protocol": "direct6_rip",
                     "since": "2019-10-01 18:42:53",
