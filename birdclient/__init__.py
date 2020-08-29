@@ -175,7 +175,8 @@ class BirdClient:
                 # Match IPv4 prefix
                 #
                 match = re.match(
-                    r"^\s*(?P<prefix>[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2})\s+(?P<line>.+)$", line,
+                    r"^\s*(?P<prefix>[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2})\s+(?P<line>.+)$",
+                    line,
                 )
                 if match:
                     # If we had sources from a previous route, save them
@@ -214,7 +215,7 @@ class BirdClient:
                     source["prefix_type"] = match.group("prefix_type")
                     source["protocol"] = match.group("protocol")
                     source["since"] = match.group("since")
-                    source["pref"] = match.group("pref")
+                    source["pref"] = int(match.group("pref"))
                     # Add source
                     sources.append(source)
                     continue
@@ -251,11 +252,11 @@ class BirdClient:
                     else:
                         source["bestpath"] = False
 
-                    source["pref"] = match.group("pref")
+                    source["pref"] = int(match.group("pref"))
                     # Check if we got a metric
                     metric = match.group("metric")
                     if metric:
-                        source["metric"] = metric
+                        source["metric"] = int(metric)
                     # Check if we got an ASN
                     asn = match.group("asn")
                     if asn:
@@ -283,12 +284,12 @@ class BirdClient:
                     source["protocol"] = match.group("protocol")
                     source["since"] = match.group("since")
                     source["ospf_type"] = match.group("ospf_type")
-                    source["pref"] = match.group("pref")
-                    source["metric1"] = match.group("metric1")
+                    source["pref"] = int(match.group("pref"))
+                    source["metric1"] = int(match.group("metric1"))
                     # Check if we have a metric2
                     metric2 = match.group("metric2")
                     if metric2:
-                        source["metric2"] = metric2
+                        source["metric2"] = int(metric2)
                     # Check if we have a tag
                     tag = match.group("tag")
                     if tag:
@@ -312,8 +313,8 @@ class BirdClient:
                     source["prefix_type"] = match.group("prefix_type")
                     source["protocol"] = match.group("protocol")
                     source["since"] = match.group("since")
-                    source["pref"] = match.group("pref")
-                    source["metric1"] = match.group("metric1")
+                    source["pref"] = int(match.group("pref"))
+                    source["metric1"] = int(match.group("metric1"))
                     # Add source
                     sources.append(source)
                     continue
@@ -331,7 +332,7 @@ class BirdClient:
                     line,
                 )
                 if match:
-                    nexthop = {}
+                    nexthop: Dict[str, Any] = {}
                     # Grab gateway
                     gateway = match.group("gateway")
                     if gateway:
@@ -351,7 +352,7 @@ class BirdClient:
                     # Grab weight
                     weight = match.group("weight")
                     if weight:
-                        nexthop["weight"] = weight
+                        nexthop["weight"] = int(weight)
                     # Save nexthops
                     if "nexthops" not in source:
                         source["nexthops"] = []
@@ -391,7 +392,7 @@ class BirdClient:
                     # Grab weight
                     weight = match.group("weight")
                     if weight:
-                        nexthop["weight"] = weight
+                        nexthop["weight"] = int(weight)
                     # Save nexthops
                     if "nexthops" not in source:
                         source["nexthops"] = []
@@ -422,7 +423,7 @@ class BirdClient:
                     # Check if we got a weight option
                     weight = match.group("weight")
                     if weight:
-                        nexthop["weight"] = weight
+                        nexthop["weight"] = int(weight)
                     # Save nexthops
                     if "nexthops" not in source:
                         source["nexthops"] = []
@@ -445,14 +446,21 @@ class BirdClient:
                     raise BirdClientParseError(f"Failed to parse code 1012: {line}")
                 attrib = match.group("attrib")
                 value = match.group("value")
-                # Check for special cases
+                # Special case for BGP.as_path
+                if attrib == "BGP.as_path":
+                    match_all = re.findall(r"(?P<as_path>\d+)\s*", value)
+                    # Replace value
+                    value = [int(x) for x in match_all]
+                # Special case for BGP.large_community
                 if attrib == "BGP.large_community":
                     match_all = re.findall(r"\((?P<lc1>\d+), (?P<lc2>\d+), (?P<lc3>\d+)\)\s*", value)
                     if not match_all:
                         raise BirdClientParseError(f"Failed to parse large community: {value}")
                     # Replace value
-                    value = match_all
-
+                    value = [(int(x[0]), int(x[1]), int(x[2])) for x in match_all]
+                # Special case for basic integers
+                if attrib in ("BGP.local_pref", "OSPF.metric1", "OSPF.metric2"):
+                    value = int(value)
                 # Check if we have attributes, if not, add
                 if "attributes" not in source:
                     source["attributes"] = {}
