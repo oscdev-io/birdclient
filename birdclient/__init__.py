@@ -449,11 +449,18 @@ class BirdClient:
                 # Special case for BGP.as_path
                 if attrib == "BGP.as_path":
                     match_all = re.findall(r"(?P<as_path>\d+)\s*", value)
-                    # Replace value
+                    # Replace values if we have any
                     value = [int(x) for x in match_all]
                 # Special case for BGP.large_community
+                if attrib == "BGP.community":
+                    match_all = re.findall(r"\((?P<c1>\d+),\s*(?P<c2>\d+)\)\s*", value)
+                    if not match_all:
+                        raise BirdClientParseError(f"Failed to parse community: {value}")
+                    # Replace value
+                    value = [(int(x[0]), int(x[1])) for x in match_all]
+                # Special case for BGP.large_community
                 if attrib == "BGP.large_community":
-                    match_all = re.findall(r"\((?P<lc1>\d+), (?P<lc2>\d+), (?P<lc3>\d+)\)\s*", value)
+                    match_all = re.findall(r"\((?P<lc1>\d+),\s*(?P<lc2>\d+),\s*(?P<lc3>\d+)\)\s*", value)
                     if not match_all:
                         raise BirdClientParseError(f"Failed to parse large community: {value}")
                     # Replace value
