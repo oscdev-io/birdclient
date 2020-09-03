@@ -20,6 +20,7 @@
  	BGP.local_pref: 150
  	BGP.originator_id: 100.64.20.1
  	BGP.cluster_list: 0.0.0.1
+ 	BGP.community: (1,0) (1,1) (1,2)
  	BGP.large_community: (65000, 3, 4) (65004, 3, 1)
 1007-100.100.0.0/24       unicast [bgp_AS65000_rr1_peer4 2019-09-30 17:14:14 from 100.64.10.3] * (100) [AS65001i]
  	via 100.64.20.1 on eth0 weight 1

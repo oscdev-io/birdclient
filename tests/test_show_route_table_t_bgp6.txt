@@ -28,6 +28,7 @@
  	BGP.local_pref: 930
  	BGP.originator_id: 100.64.20.1
  	BGP.cluster_list: 0.0.0.1
+ 	BGP.community: (1,0) (1,1) (1,2)
  	BGP.large_community: (65000, 3, 1)
 1007-                     unicast [bgp_AS65000_rr2_peer6 2019-09-30 17:14:14 from fc20::3] (100) [AS65006i]
  	via fe80::20:1ff:fe00:1 on eth0 weight 1
