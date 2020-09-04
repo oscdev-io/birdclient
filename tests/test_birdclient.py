@@ -474,12 +474,7 @@ class TestBirdClient:
                     "attributes": {
                         "BGP.as_path": [65001],
                         "BGP.cluster_list": "0.0.0.1",
-                        "BGP.large_community": [
-                            (65000, 1, 900),
-                            (65000, 3, 2),
-                            (65000, 4, 65004),
-                            (65001, 3, 1),
-                        ],
+                        "BGP.large_community": [],
                         "BGP.local_pref": 750,
                         "BGP.next_hop": "100.64.50.3",
                         "BGP.origin": "IGP",
@@ -664,7 +659,7 @@ class TestBirdClient:
                     "attributes": {
                         "BGP.as_path": [65006],
                         "BGP.cluster_list": "0.0.0.1",
-                        "BGP.large_community": [(65000, 3, 3), (65006, 3, 1)],
+                        "BGP.large_community": [],
                         "BGP.local_pref": 450,
                         "BGP.next_hop": "fc40::11 fe80::40:1ff:fe00:1",
                         "BGP.origin": "IGP",

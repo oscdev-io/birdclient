@@ -454,24 +454,21 @@ class BirdClient:
                 # Special case for BGP.ext_community
                 if attrib == "BGP.ext_community":
                     match_all = re.findall(r"\((?P<c1>(?:ro|rt)),\s*(?P<c2>\d+),\s*(?P<c3>\d+)\)\s*", value)
-                    if not match_all:
-                        raise BirdClientParseError(f"Failed to parse community: {value}")
-                    # Replace value
-                    value = [(x[0], int(x[1]), int(x[2])) for x in match_all]
+                    value = []
+                    if match_all:
+                        value.extend([(x[0], int(x[1]), int(x[2])) for x in match_all])
                 # Special case for BGP.large_community
                 if attrib == "BGP.community":
                     match_all = re.findall(r"\((?P<c1>\d+),\s*(?P<c2>\d+)\)\s*", value)
-                    if not match_all:
-                        raise BirdClientParseError(f"Failed to parse community: {value}")
-                    # Replace value
-                    value = [(int(x[0]), int(x[1])) for x in match_all]
+                    value = []
+                    if match_all:
+                        value.extend([(int(x[0]), int(x[1])) for x in match_all])
                 # Special case for BGP.large_community
                 if attrib == "BGP.large_community":
                     match_all = re.findall(r"\((?P<lc1>\d+),\s*(?P<lc2>\d+),\s*(?P<lc3>\d+)\)\s*", value)
-                    if not match_all:
-                        raise BirdClientParseError(f"Failed to parse large community: {value}")
-                    # Replace value
-                    value = [(int(x[0]), int(x[1]), int(x[2])) for x in match_all]
+                    value = []
+                    if match_all:
+                        value.extend([(int(x[0]), int(x[1]), int(x[2])) for x in match_all])
                 # Special case for basic integers
                 if attrib in ("BGP.local_pref", "OSPF.metric1", "OSPF.metric2"):
                     value = int(value)

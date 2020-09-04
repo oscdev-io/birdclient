@@ -41,5 +41,5 @@
  	BGP.local_pref: 450
  	BGP.originator_id: 100.64.10.1
  	BGP.cluster_list: 0.0.0.1
- 	BGP.large_community: (65000, 3, 3) (65006, 3, 1)
+ 	BGP.large_community: 
 0000 
