@@ -472,6 +472,10 @@ class BirdClient:
                 # Special case for basic integers
                 if attrib in ("BGP.local_pref", "OSPF.metric1", "OSPF.metric2"):
                     value = int(value)
+                # Special case for BGP.next_hop
+                if attrib == "BGP.next_hop":
+                    match_all = re.findall(r"(?P<next_hop>\S+)\s*", value)
+                    value = [x for x in match_all]
                 # Check if we have attributes, if not, add
                 if "attributes" not in source:
                     source["attributes"] = {}
