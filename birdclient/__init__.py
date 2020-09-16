@@ -510,10 +510,13 @@ class BirdClient:
         # Initialize byte array to store what we get back
         data = bytearray()
 
+        # Set timeout just incase
+        sock.settimeout(300)
+
         # Loop while we're not done
         done = False
         while not done:
-            chunk = sock.recv(10)
+            chunk = sock.recv(4096)
             data.extend(chunk)
             # If the last bit of data ends us off in a newline, this may be the end of the stream
             if data.endswith(b"\n"):
