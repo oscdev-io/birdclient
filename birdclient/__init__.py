@@ -517,6 +517,7 @@ class BirdClient:
         done = False
         while not done:
             chunk = sock.recv(4096)
+            print(f"CHUNK: {chunk!r}")
             data.extend(chunk)
             # If the last bit of data ends us off in a newline, this may be the end of the stream
             if data.endswith(b"\n"):
