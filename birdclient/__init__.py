@@ -49,7 +49,37 @@ class BirdClient:
         # Set socket file
         self._socket_file = socket_file
         # Setup ending lines
-        self._ending_lines = [b"0000 ", b"0004", b"0013 ", b"0019", b"8001 ", b"8003 ", b"9001 "]
+        self._ending_lines = [
+            b"0000 ",
+            b"0001 ",
+            b"0002 ",
+            b"0003 ",
+            b"0004 ",
+            b"0005 ",
+            b"0006 ",
+            b"0007 ",
+            b"0008 ",
+            b"0009 ",
+            b"0010 ",
+            b"0011 ",
+            b"0012 ",
+            b"0013 ",
+            b"0014 ",
+            b"0015 ",
+            b"0016 ",
+            b"0017 ",
+            b"0018 ",
+            b"0019 ",
+            b"0020 ",
+            b"0021 ",
+            b"0022 ",
+            b"0023 ",
+            b"0024 ",
+            b"0025 ",
+            b"8001 ",
+            b"8003 ",
+            b"9001 ",
+        ]
 
     def show_status(self, data: Optional[List[str]] = None) -> Dict[str, str]:
         """Return parsed BIRD status."""
