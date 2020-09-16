@@ -510,6 +510,9 @@ class BirdClient:
         # Initialize byte array to store what we get back
         data = bytearray()
 
+        # Set timeout just incase
+        sock.settimeout(300)
+
         # Loop while we're not done
         done = False
         while not done:
