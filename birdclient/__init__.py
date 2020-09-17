@@ -51,7 +51,6 @@ class BirdClient:
         # Setup ending lines
         self._ending_lines = [
             b"0000 ",
-            b"0001 ",
             b"0002 ",
             b"0003 ",
             b"0004 ",
