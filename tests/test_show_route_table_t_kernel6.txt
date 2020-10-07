@@ -6,4 +6,11 @@
 1007-fec0:10::/64         unicast [static6 2019-09-01 13:36:14] * (200)
         via fec0::4 on eth0
 1008-   Type: static univ
+1007-::/0                 unreachable [bgp6_AS65000_r1 2020-10-07 09:06:05 from fc00:100::1] * (100/-) [i]
+1008-	Type: BGP univ
+1012-	BGP.origin: IGP
+ 	BGP.as_path: 
+ 	BGP.next_hop: fc00:101::2
+ 	BGP.local_pref: 945
+ 	BGP.large_community: (65000, 3, 1)
 0000
