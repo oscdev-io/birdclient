@@ -9,4 +9,11 @@
 1007-10.0.2.0/24          unicast [static4 2019-09-01 13:36:14] * (200)
         via 192.168.0.5 on eth0
 1008-   Type: static univ
+1007-0.0.0.0/0            unreachable [bgp4_AS65000_r1 2020-10-07 09:06:05 from 192.168.0.1] * (100/?) [i]
+1008-	Type: BGP univ
+1012-	BGP.origin: IGP
+ 	BGP.as_path: 
+ 	BGP.next_hop: 192.168.0.5
+ 	BGP.local_pref: 945
+ 	BGP.large_community: (65000, 3, 1)
 0000
