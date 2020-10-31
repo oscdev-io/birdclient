@@ -258,7 +258,7 @@ class BirdClient:
                     r"(?P<protocol>\S+) " + _SINCE_MATCH + r"(?: from (?P<from>[a-z0-9\.:]+))?"
                     r"\] "
                     r"(?:(?P<bestpath>\*) )?"
-                    r"\((?P<pref>\d+)(?:/(?P<metric>\d+|-))?\) "
+                    r"\((?P<pref>\d+)(?:/(?P<metric>\d+|[-?]))?\) "
                     r"\["
                     r"(?P<asn>AS[0-9]+)?"
                     r"(?P<bgp_type>[ie\?])"
@@ -285,7 +285,7 @@ class BirdClient:
                     # Check if we got a metric
                     metric = match.group("metric")
                     if metric:
-                        if metric == "-":
+                        if metric == "-" or metric == "?":
                             source["metric"] = None
                         else:
                             source["metric"] = int(metric)

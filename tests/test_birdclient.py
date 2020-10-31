@@ -192,6 +192,26 @@ class TestBirdClient:
         result = birdclient.show_route_table("t_kernel4", self._load_file("test_show_route_table_t_kernel4.txt"))
 
         correct_result = {
+            "0.0.0.0/0": [
+                {
+                    "attributes": {
+                        "BGP.as_path": [],
+                        "BGP.large_community": [(65000, 3, 1)],
+                        "BGP.local_pref": 945,
+                        "BGP.next_hop": ["192.168.0.5"],
+                        "BGP.origin": "IGP",
+                    },
+                    "bestpath": True,
+                    "bgp_type": "i",
+                    "from": "192.168.0.1",
+                    "metric": None,
+                    "pref": 100,
+                    "prefix_type": "unreachable",
+                    "protocol": "bgp4_AS65000_r1",
+                    "since": "2020-10-07 09:06:05",
+                    "type": ["BGP", "univ"],
+                }
+            ],
             "10.0.1.0/24": [
                 {
                     "nexthops": [{"gateway": "192.168.0.4", "interface": "eth0"}],
