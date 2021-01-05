@@ -167,9 +167,10 @@ class BirdClient:
 
         # Loop with data to grab information we need
         code = ""
-        sources: List[Dict] = []
+        sources: List[Dict[str, Any]] = []
         source: Dict[str, Any] = {}
         prefix: str = ""
+        attrib: str = ""
         value: Any
         for line in data:
             match = re.match(r"^(?P<code>[0-9]{4})-?\s*(?P<line>.*)$", line)
@@ -473,45 +474,84 @@ class BirdClient:
 
             # Pull off route attributes
             if code == "1012":
-                match = re.match(r"^\s*(?P<attrib>[A-Za-z0-9\._]+): (?P<value>.*)$", line)
-                if not match:
-                    raise BirdClientParseError(f"Failed to parse code 1012: {line}")
-                attrib = match.group("attrib")
-                value = match.group("value")
+                # Check if we match a second line in a multiline attribute
+                match = re.match(r"^ \t\t(?P<value>.*)$", line)
+                if match:
+                    # If we do, we should have an attribute set
+                    if not attrib:
+                        # If not, throw a parsing error
+                        raise BirdClientParseError(f"Failed to parse code 1012: {line}")
+                    # Finally if we do, grab the value
+                    value = match.group("value")
+                else:
+                    match = re.match(r"^\s*(?P<attrib>[A-Za-z0-9\._]+): (?P<value>.*)$", line)
+                    if not match:
+                        raise BirdClientParseError(f"Failed to parse code 1012: {line}")
+                    attrib = match.group("attrib")
+                    value = match.group("value")
+
+                # Check if we have attributes, if not, add
+                if "attributes" not in source:
+                    source["attributes"] = {}
+
                 # Special case for BGP.as_path
                 if attrib == "BGP.as_path":
                     match_all = re.findall(r"(?P<as_path>\d+)\s*", value)
                     # Replace values if we have any
                     value = [int(x) for x in match_all]
                 # Special case for BGP.ext_community
-                if attrib == "BGP.ext_community":
+                elif attrib == "BGP.ext_community":
                     match_all = re.findall(r"\((?P<c1>(?:ro|rt)),\s*(?P<c2>\d+),\s*(?P<c3>\d+)\)\s*", value)
                     value = []
                     if match_all:
                         value.extend([(x[0], int(x[1]), int(x[2])) for x in match_all])
                 # Special case for BGP.large_community
-                if attrib == "BGP.community":
+                elif attrib == "BGP.community":
                     match_all = re.findall(r"\((?P<c1>\d+),\s*(?P<c2>\d+)\)\s*", value)
                     value = []
                     if match_all:
                         value.extend([(int(x[0]), int(x[1])) for x in match_all])
                 # Special case for BGP.large_community
-                if attrib == "BGP.large_community":
+                elif attrib == "BGP.large_community":
                     match_all = re.findall(r"\((?P<lc1>\d+),\s*(?P<lc2>\d+),\s*(?P<lc3>\d+)\)\s*", value)
                     value = []
                     if match_all:
                         value.extend([(int(x[0]), int(x[1]), int(x[2])) for x in match_all])
                 # Special case for basic integers
-                if attrib in ("BGP.local_pref", "OSPF.metric1", "OSPF.metric2"):
+                elif attrib in ("BGP.local_pref", "OSPF.metric1", "OSPF.metric2"):
                     value = int(value)
                 # Special case for BGP.next_hop
-                if attrib == "BGP.next_hop":
+                elif attrib == "BGP.next_hop":
                     match_all = re.findall(r"(?P<next_hop>\S+)\s*", value)
                     value = [x for x in match_all]
-                # Check if we have attributes, if not, add
-                if "attributes" not in source:
-                    source["attributes"] = {}
-                source["attributes"][attrib] = value
+                # Special case for BGP.origin
+                elif attrib == "BGP.origin":
+                    pass
+                # Special case for BGP.originator_id
+                elif attrib == "BGP.originator_id":
+                    pass
+                # Special case for BGP.cluster_list
+                elif attrib == "BGP.cluster_list":
+                    pass
+                # Special case for OSPF.router_id
+                elif attrib == "OSPF.router_id":
+                    pass
+                # Special case for OSPF.tag
+                elif attrib == "OSPF.tag":
+                    pass
+                # Finally if we don't understand the attribute
+                else:
+                    raise BirdClientParseError(f"Failed to parse code 1012 attribute '{attrib}: {line}")
+
+                # Check if we have an attribute value already
+                if attrib in source["attributes"]:
+                    if isinstance(value, list):
+                        source["attributes"][attrib].extend(value)
+                    else:
+                        raise BirdClientParseError("Value is not a list but has multiple items")
+                else:
+                    source["attributes"][attrib] = value
+
                 continue
 
             # Check for errors
