@@ -533,12 +533,31 @@ class BirdClient:
                 # Special case for BGP.cluster_list
                 elif attrib == "BGP.cluster_list":
                     pass
+
                 # Special case for OSPF.router_id
                 elif attrib == "OSPF.router_id":
                     pass
                 # Special case for OSPF.tag
                 elif attrib == "OSPF.tag":
                     pass
+
+                # Special case for Kernel.metric
+                elif attrib == "Kernel.metric":
+                    pass
+                # Special case for Kernel.scope
+                elif attrib == "Kernel.scope":
+                    pass
+                # Special case for Kernel.source
+                elif attrib == "Kernel.source":
+                    pass
+
+                # Special case for RIP.metric
+                elif attrib == "RIP.metric":
+                    pass
+                # Special case for RIP.tag
+                elif attrib == "RIP.tag":
+                    pass
+
                 # Finally if we don't understand the attribute
                 else:
                     raise BirdClientParseError(f"Failed to parse code 1012 attribute '{attrib}: {line}")
