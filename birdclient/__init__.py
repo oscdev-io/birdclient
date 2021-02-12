@@ -518,7 +518,7 @@ class BirdClient:
                     if match_all:
                         value.extend([(int(x[0]), int(x[1]), int(x[2])) for x in match_all])
                 # Special case for basic integers
-                elif attrib in ("BGP.local_pref", "OSPF.metric1", "OSPF.metric2"):
+                elif attrib in ("BGP.local_pref", "Kernel.metric", "OSPF.metric1", "OSPF.metric2", "RIP.metric"):
                     value = int(value)
                 # Special case for BGP.next_hop
                 elif attrib == "BGP.next_hop":
@@ -526,38 +526,79 @@ class BirdClient:
                     value = [x for x in match_all]
                 # Special case for BGP.origin
                 elif attrib == "BGP.origin":
+                    # Normal string
                     pass
                 # Special case for BGP.originator_id
                 elif attrib == "BGP.originator_id":
+                    # Normal string
                     pass
                 # Special case for BGP.cluster_list
                 elif attrib == "BGP.cluster_list":
+                    # Normal string
                     pass
 
                 # Special case for OSPF.router_id
                 elif attrib == "OSPF.router_id":
+                    # Normal string
                     pass
                 # Special case for OSPF.tag
                 elif attrib == "OSPF.tag":
+                    # Tag is hex, so we treat it as a string
                     pass
 
-                # Special case for Kernel.metric
-                elif attrib == "Kernel.metric":
-                    pass
                 # Special case for Kernel.scope
                 elif attrib == "Kernel.scope":
-                    pass
+                    # Translate kernel scope based on /etc/iproute2/rt_scopes
+                    if value == "0":
+                        value = "global"
+                    elif value == "255":
+                        value = "link"
+                    elif value == "254":
+                        value = "host"
+                    elif value == "253":
+                        value = "link"
+                    elif value == "200":
+                        value = "site"
+                    else:
+                        raise BirdClientParseError(f"Kernel scope '{value}' found and not understood: {line}")
                 # Special case for Kernel.source
                 elif attrib == "Kernel.source":
-                    pass
-
-                # Special case for RIP.metric
-                elif attrib == "RIP.metric":
-                    pass
+                    # Translate kernel source into value
+                    # https://github.com/BIRD/bird/blob/master/nest/route.h#L370
+                    if value == "0":
+                        value = "RTS_DUMMY"
+                    elif value == "1":
+                        value = "RTS_STATIC"
+                    elif value == "2":
+                        value = "RTS_INHERIT"
+                    elif value == "3":
+                        value = "RTS_DEVICE"
+                    elif value == "4":
+                        value = "RTS_STATIC_DEVICE"
+                    elif value == "5":
+                        value = "RTS_REDIRECT"
+                    elif value == "6":
+                        value = "RTS_RIP"
+                    elif value == "7":
+                        value = "RTS_OSPF"
+                    elif value == "8":
+                        value = "RTS_OSPF_IA"
+                    elif value == "9":
+                        value = "RTS_OSPF_EXT1"
+                    elif value == "10":
+                        value = "RTS_OSPF_EXT2"
+                    elif value == "11":
+                        value = "RTS_BGP"
+                    elif value == "12":
+                        value = "RTS_PIPE"
+                    elif value == "13":
+                        value = "RTS_BABEL"
+                    else:
+                        raise BirdClientParseError("Unknown 'Kernel.source' attribute")
                 # Special case for RIP.tag
                 elif attrib == "RIP.tag":
+                    # This is a string (HEX)
                     pass
-
                 # Finally if we don't understand the attribute
                 else:
                     raise BirdClientParseError(f"Failed to parse code 1012 attribute '{attrib}: {line}")
