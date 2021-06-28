@@ -237,7 +237,7 @@ class BirdClient:
                     r"^(?P<prefix_type>[a-z]+) "
                     r"\[(?P<protocol>\S+) " + _SINCE_MATCH + r"\] "
                     r"(?:(?P<bestpath>\*) )?"
-                    r"\((?P<pref>\d+)\)$",
+                    r"\((?P<pref>\d+)(?:/(?P<metric1>\d+))?\)$",
                     line,
                 )
                 if match:
@@ -246,6 +246,10 @@ class BirdClient:
                     source["protocol"] = match.group("protocol")
                     source["since"] = match.group("since")
                     source["pref"] = int(match.group("pref"))
+                    # Check if we have a metric1
+                    metric1 = match.group("metric1")
+                    if metric1:
+                        source["metric1"] = int(metric1)
                     # Add source
                     sources.append(source)
                     continue
