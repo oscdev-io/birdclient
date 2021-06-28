@@ -237,7 +237,7 @@ class BirdClient:
                     r"^(?P<prefix_type>[a-z]+) "
                     r"\[(?P<protocol>\S+) " + _SINCE_MATCH + r"\] "
                     r"(?:(?P<bestpath>\*) )?"
-                    r"\((?P<pref>\d+)(?:/(?P<metric1>\d+))?\)$",
+                    r"\((?P<pref>\d+)\)$",
                     line,
                 )
                 if match:
@@ -246,12 +246,6 @@ class BirdClient:
                     source["protocol"] = match.group("protocol")
                     source["since"] = match.group("since")
                     source["pref"] = int(match.group("pref"))
-                    # Check if we have a metric1
-                    # RE-ENABLE
-                    # metric1 = match.group("metric1")
-                    # if metric1:
-                    #    source["metric1"] = int(metric1)
-                    # RE-ENABLE - add bestpath
                     # Add source
                     sources.append(source)
                     continue
@@ -351,6 +345,7 @@ class BirdClient:
                 match = re.match(
                     r"^(?P<prefix_type>[a-z]+) "
                     r"\[(?P<protocol>\S+)\s+" + _SINCE_MATCH + r"\] "
+                    r"(?:(?P<bestpath>\*) )?"
                     r"\((?P<pref>\d+)/(?P<metric1>\d+)\)$",
                     line,
                 )
@@ -361,6 +356,12 @@ class BirdClient:
                     source["since"] = match.group("since")
                     source["pref"] = int(match.group("pref"))
                     source["metric1"] = int(match.group("metric1"))
+                    # NK: RE-ENABLE
+                    #                    bestpath = match.group("bestpath")
+                    #                    if bestpath:
+                    #                        source["bestpath"] = True
+                    #                    else:
+                    #                        source["bestpath"] = True
                     # Add source
                     sources.append(source)
                     continue
