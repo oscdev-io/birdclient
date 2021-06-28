@@ -247,9 +247,10 @@ class BirdClient:
                     source["since"] = match.group("since")
                     source["pref"] = int(match.group("pref"))
                     # Check if we have a metric1
-                    metric1 = match.group("metric1")
-                    if metric1:
-                        source["metric1"] = int(metric1)
+                    #NK: RE-ENABLE
+#                    metric1 = match.group("metric1")
+#                    if metric1:
+#                        source["metric1"] = int(metric1)
                     # Add source
                     sources.append(source)
                     continue
@@ -324,10 +325,12 @@ class BirdClient:
                     source["ospf_type"] = match.group("ospf_type")
                     source["pref"] = int(match.group("pref"))
                     source["metric1"] = int(match.group("metric1"))
-                    bestpath = match.group("bestpath")
-                    if bestpath:
-                        source["bestpath"] = True
-                    # NK: Add bestpath = False
+                    #NK: RE-ENABLE
+#                    bestpath = match.group("bestpath")
+#                    if bestpath:
+#                        source["bestpath"] = True
+#                    else:
+#                        source["bestpath"] = True
                     # Check if we have a metric2
                     metric2 = match.group("metric2")
                     if metric2:
