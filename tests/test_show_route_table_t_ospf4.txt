@@ -20,6 +20,11 @@
 1008-  Type: OSPF univ
 1012-  OSPF.metric1: 20
        OSPF.router_id: 100.64.20.1
+1007-100.64.44.2/31       unicast [ospf4 2019-09-30 17:14:09] * I (150/20) [100.64.30.1]
+       via 100.64.30.1 on eth0
+1008-  Type: OSPF univ
+1012-  OSPF.metric1: 30
+       OSPF.router_id: 100.64.30.1
 1007-100.90.0.0/28        unicast [ospf4 2019-09-30 17:14:13] E2 (150/40/10000) [100.64.10.2]
        via 100.64.20.1 on eth0 weight 1
        via 100.64.20.5 on eth0 weight 1
