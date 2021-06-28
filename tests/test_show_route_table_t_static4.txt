@@ -6,7 +6,4 @@
 1007-10.0.2.0/24          unicast [static4 2019-09-01 13:36:14] * (200)
         via 192.168.0.5 on eth0
 1008-   Type: static univ
-1007-10.0.3.0/24          unicast [static4 2019-09-01 13:36:14] * (120/3)
-        via 192.168.0.6 on eth0
-1008-   Type: static univ
 0000

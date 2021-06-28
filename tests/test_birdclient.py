@@ -150,17 +150,6 @@ class TestBirdClient:
                     "type": ["static", "univ"],
                 }
             ],
-            "10.0.3.0/24": [
-                {
-                    "nexthops": [{"gateway": "192.168.0.6", "interface": "eth0"}],
-                    #                    "metric1": 3,
-                    "pref": 120,
-                    "prefix_type": "unicast",
-                    "protocol": "static4",
-                    "since": "2019-09-01 13:36:14",
-                    "type": ["static", "univ"],
-                }
-            ],
         }
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
@@ -758,8 +747,7 @@ class TestBirdClient:
         correct_result = {
             "192.168.10.0/24": [
                 {
-                    # RE-ENABLE
-                    # "metric1": 3,
+                    "metric1": 3,
                     "nexthops": [{"gateway": "192.168.0.1", "interface": "eth0"}],
                     "pref": 120,
                     "prefix_type": "unicast",
@@ -789,8 +777,7 @@ class TestBirdClient:
         correct_result = {
             "fc10::/64": [
                 {
-                    # RE-ENABLE
-                    # "metric1": 3,
+                    "metric1": 3,
                     "nexthops": [{"gateway": "fe80::1:ff:fe00:1", "interface": "eth0"}],
                     "pref": 120,
                     "prefix_type": "unicast",
