@@ -309,6 +309,7 @@ class BirdClient:
                 match = re.match(
                     r"^(?P<prefix_type>[a-z]+) "
                     r"\[(?P<protocol>\S+)\s+" + _SINCE_MATCH + r"\] "
+                    r"(?:(?P<bestpath>\*) )?"
                     r"(?P<ospf_type>(?:I|IA|E1|E2)) "
                     r"\((?P<pref>\d+)/(?P<metric1>\d+)(?:/(?P<metric2>\d+))?\)"
                     r"(?: \[(?P<tag>[0-9a-f]+)\])?"
@@ -323,6 +324,10 @@ class BirdClient:
                     source["ospf_type"] = match.group("ospf_type")
                     source["pref"] = int(match.group("pref"))
                     source["metric1"] = int(match.group("metric1"))
+                    bestpath = match.group("bestpath")
+                    if bestpath:
+                        source["bestpath"] = True
+                    # NK: Add bestpath = False
                     # Check if we have a metric2
                     metric2 = match.group("metric2")
                     if metric2:

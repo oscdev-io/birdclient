@@ -349,6 +349,21 @@ class TestBirdClient:
                     "type": ["OSPF", "univ"],
                 }
             ],
+            "100.64.44.2/31": [
+                {
+                    "attributes": {"OSPF.metric1": 30, "OSPF.router_id": "100.64.30.1"},
+                    "bestpath": True,
+                    "metric1": 20,
+                    "nexthops": [{"gateway": "100.64.30.1", "interface": "eth0"}],
+                    "ospf_type": "I",
+                    "pref": 150,
+                    "prefix_type": "unicast",
+                    "protocol": "ospf4",
+                    "router_id": "100.64.30.1",
+                    "since": "2019-09-30 17:14:09",
+                    "type": ["OSPF", "univ"],
+                }
+            ],
             "100.64.50.2/31": [
                 {
                     "attributes": {"OSPF.metric1": 40, "OSPF.router_id": "100.64.10.2"},
