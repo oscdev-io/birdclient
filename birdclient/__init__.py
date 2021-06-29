@@ -246,6 +246,10 @@ class BirdClient:
                     source["protocol"] = match.group("protocol")
                     source["since"] = match.group("since")
                     source["pref"] = int(match.group("pref"))
+                    # Check if we have a bestpath
+                    bestpath = match.group("bestpath")
+                    if bestpath:
+                        source["bestpath"] = True
                     # Add source
                     sources.append(source)
                     continue
@@ -279,8 +283,6 @@ class BirdClient:
                     bestpath = match.group("bestpath")
                     if bestpath:
                         source["bestpath"] = True
-                    else:
-                        source["bestpath"] = False
 
                     source["pref"] = int(match.group("pref"))
                     # Check if we got a metric
@@ -320,12 +322,10 @@ class BirdClient:
                     source["ospf_type"] = match.group("ospf_type")
                     source["pref"] = int(match.group("pref"))
                     source["metric1"] = int(match.group("metric1"))
-                    # NK: RE-ENABLE
-                    #                    bestpath = match.group("bestpath")
-                    #                    if bestpath:
-                    #                        source["bestpath"] = True
-                    #                    else:
-                    #                        source["bestpath"] = True
+                    # Check if we have a bestpath
+                    bestpath = match.group("bestpath")
+                    if bestpath:
+                        source["bestpath"] = True
                     # Check if we have a metric2
                     metric2 = match.group("metric2")
                     if metric2:
@@ -356,12 +356,9 @@ class BirdClient:
                     source["since"] = match.group("since")
                     source["pref"] = int(match.group("pref"))
                     source["metric1"] = int(match.group("metric1"))
-                    # NK: RE-ENABLE
-                    #                    bestpath = match.group("bestpath")
-                    #                    if bestpath:
-                    #                        source["bestpath"] = True
-                    #                    else:
-                    #                        source["bestpath"] = True
+                    bestpath = match.group("bestpath")
+                    if bestpath:
+                        source["bestpath"] = True
                     # Add source
                     sources.append(source)
                     continue
