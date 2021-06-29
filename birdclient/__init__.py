@@ -250,6 +250,8 @@ class BirdClient:
                     bestpath = match.group("bestpath")
                     if bestpath:
                         source["bestpath"] = True
+                    else:
+                        source["bestpath"] = False
                     # Add source
                     sources.append(source)
                     continue
@@ -283,6 +285,8 @@ class BirdClient:
                     bestpath = match.group("bestpath")
                     if bestpath:
                         source["bestpath"] = True
+                    else:
+                        source["bestpath"] = False
 
                     source["pref"] = int(match.group("pref"))
                     # Check if we got a metric
@@ -326,6 +330,8 @@ class BirdClient:
                     bestpath = match.group("bestpath")
                     if bestpath:
                         source["bestpath"] = True
+                    else:
+                        source["bestpath"] = False
                     # Check if we have a metric2
                     metric2 = match.group("metric2")
                     if metric2:
@@ -359,6 +365,8 @@ class BirdClient:
                     bestpath = match.group("bestpath")
                     if bestpath:
                         source["bestpath"] = True
+                    else:
+                        source["bestpath"] = False
                     # Add source
                     sources.append(source)
                     continue

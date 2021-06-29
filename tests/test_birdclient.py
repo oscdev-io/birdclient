@@ -132,6 +132,7 @@ class TestBirdClient:
         correct_result = {
             "10.0.1.0/24": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "192.168.0.4", "interface": "eth0"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -142,6 +143,7 @@ class TestBirdClient:
             ],
             "10.0.2.0/24": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "192.168.0.5", "interface": "eth0"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -163,6 +165,7 @@ class TestBirdClient:
         correct_result = {
             "fec0:10::/64": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "fec0::4", "interface": "eth0"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -173,6 +176,7 @@ class TestBirdClient:
             ],
             "fec0:20::/64": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "fec0::5", "interface": "eth0"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -214,6 +218,7 @@ class TestBirdClient:
             ],
             "10.0.1.0/24": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "192.168.0.4", "interface": "eth0"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -224,6 +229,7 @@ class TestBirdClient:
             ],
             "10.0.2.0/24": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "192.168.0.5", "interface": "eth0"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -234,6 +240,7 @@ class TestBirdClient:
             ],
             "172.16.100.0/24": [
                 {
+                    "bestpath": False,
                     "nexthops": [{"gateway": "172.16.10.10", "interface": "eth9"}],
                     "pref": 10,
                     "prefix_type": "unicast",
@@ -275,6 +282,7 @@ class TestBirdClient:
             ],
             "fec0:10::/64": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "fec0::4", "interface": "eth0"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -285,6 +293,7 @@ class TestBirdClient:
             ],
             "fec0:20::/64": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "fec0::5", "interface": "eth0"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -306,6 +315,7 @@ class TestBirdClient:
         correct_result = {
             "10.0.1.0/24": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "192.168.0.4", "interface": "eth0"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -316,6 +326,7 @@ class TestBirdClient:
             ],
             "10.0.2.0/24": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "192.168.0.5", "interface": "eth0"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -327,6 +338,7 @@ class TestBirdClient:
             "100.64.43.2/31": [
                 {
                     "attributes": {"OSPF.metric1": 20, "OSPF.router_id": "100.64.20.1"},
+                    "bestpath": False,
                     "metric1": 20,
                     "nexthops": [{"gateway": "100.64.20.1", "interface": "eth0"}],
                     "ospf_type": "I",
@@ -341,7 +353,7 @@ class TestBirdClient:
             "100.64.44.2/31": [
                 {
                     "attributes": {"OSPF.metric1": 30, "OSPF.router_id": "100.64.30.1"},
-                    #                    "bestpath": True,
+                    "bestpath": True,
                     "metric1": 20,
                     "nexthops": [{"gateway": "100.64.30.1", "interface": "eth0"}],
                     "ospf_type": "I",
@@ -356,6 +368,7 @@ class TestBirdClient:
             "100.64.50.2/31": [
                 {
                     "attributes": {"OSPF.metric1": 40, "OSPF.router_id": "100.64.10.2"},
+                    "bestpath": False,
                     "metric1": 40,
                     "nexthops": [
                         {"gateway": "100.64.20.1", "interface": "eth0", "weight": 1},
@@ -378,6 +391,7 @@ class TestBirdClient:
                         "OSPF.router_id": "100.64.10.2",
                         "OSPF.tag": "0x00000000",
                     },
+                    "bestpath": False,
                     "metric1": 40,
                     "metric2": 10000,
                     "nexthops": [
@@ -395,6 +409,7 @@ class TestBirdClient:
             ],
             "172.16.100.0/24": [
                 {
+                    "bestpath": False,
                     "nexthops": [{"gateway": "172.16.10.10", "interface": "eth9"}],
                     "pref": 10,
                     "prefix_type": "unicast",
@@ -416,6 +431,7 @@ class TestBirdClient:
         correct_result = {
             "fec0:10::/64": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "fec0::4", "interface": "eth0"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -426,6 +442,7 @@ class TestBirdClient:
             ],
             "fec0:20::/64": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "fec0::5", "interface": "eth0"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -453,6 +470,7 @@ class TestBirdClient:
                         "OSPF.router_id": "100.64.10.2",
                         "OSPF.tag": "0x00000000",
                     },
+                    "bestpath": False,
                     "metric1": 40,
                     "metric2": 10000,
                     "nexthops": [
@@ -471,6 +489,7 @@ class TestBirdClient:
             "fc50::2/127": [
                 {
                     "attributes": {"OSPF.metric1": 40, "OSPF.router_id": "100.64.10.2"},
+                    "bestpath": False,
                     "metric1": 40,
                     "nexthops": [
                         {"gateway": "fe80::20:1ff:fe00:1", "interface": "eth0", "weight": 1},
@@ -487,6 +506,7 @@ class TestBirdClient:
             ],
             "fec0:20::/64": [
                 {
+                    "bestpath": False,
                     "metric1": 20,
                     "metric2": 10000,
                     "nexthops": [{"gateway": "fe80::8c84:28ff:fe6c:40ae", "interface": "eth0"}],
@@ -501,6 +521,7 @@ class TestBirdClient:
             ],
             "fec0::/64": [
                 {
+                    "bestpath": False,
                     "metric1": 20,
                     "nexthops": [{"gateway": "fe80::8c84:28ff:fe6c:40ae", "interface": "eth0"}],
                     "ospf_type": "I",
@@ -616,6 +637,7 @@ class TestBirdClient:
             "100.64.11.0/24": [
                 {
                     "attributes": {"BGP.large_community": [(65000, 3, 1)], "BGP.local_pref": 930},
+                    "bestpath": True,
                     "pref": 200,
                     "prefix_type": "blackhole",
                     "protocol": "bgp_originate4",
@@ -747,6 +769,7 @@ class TestBirdClient:
         correct_result = {
             "192.168.10.0/24": [
                 {
+                    "bestpath": False,
                     "metric1": 3,
                     "nexthops": [{"gateway": "192.168.0.1", "interface": "eth0"}],
                     "pref": 120,
@@ -757,6 +780,7 @@ class TestBirdClient:
             ],
             "192.168.21.0/24": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "192.168.20.3", "interface": "eth1"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -777,6 +801,7 @@ class TestBirdClient:
         correct_result = {
             "fc10::/64": [
                 {
+                    "bestpath": False,
                     "metric1": 3,
                     "nexthops": [{"gateway": "fe80::1:ff:fe00:1", "interface": "eth0"}],
                     "pref": 120,
@@ -787,6 +812,7 @@ class TestBirdClient:
             ],
             "fc21::/64": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"gateway": "fc20::3", "interface": "eth1"}],
                     "pref": 200,
                     "prefix_type": "unicast",
@@ -807,6 +833,7 @@ class TestBirdClient:
         correct_result = {
             "192.168.10.0/24": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"interface": "eth1"}],
                     "pref": 240,
                     "prefix_type": "unicast",
@@ -827,6 +854,7 @@ class TestBirdClient:
         correct_result = {
             "fc10::/64": [
                 {
+                    "bestpath": True,
                     "nexthops": [{"interface": "eth1"}],
                     "pref": 240,
                     "prefix_type": "unicast",
