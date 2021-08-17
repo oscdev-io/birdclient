@@ -660,7 +660,7 @@ class BirdClient:
         sock.connect(self._socket_file)
 
         # Send the query
-        sock.send(f"{query}\n".encode("ascii"))
+        sock.send(f"{query}\n".encode("UTF-8"))
 
         # Initialize byte array to store what we get back
         data = bytearray()
@@ -691,4 +691,4 @@ class BirdClient:
             print(f"Bird Reply:\n{data.decode('UTF-8')}")
 
         # Convert data bytes to a string and split into lines
-        return data.decode("ascii").splitlines()
+        return data.decode("UTF-8").splitlines()
