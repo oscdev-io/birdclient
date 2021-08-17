@@ -38,14 +38,18 @@ _SINCE_MATCH = r"(?P<since>(?:[0-9]{4}-[0-9]{2}-[0-9]{2} )?[0-9]{2}:[0-9]{2}:[0-
 class BirdClient:
     """BIRD client class."""
 
+    # Debug flag
+    _debug: bool
     # Socket file
     _socket_file: str
     # Ending lines for bird control channel
     _ending_lines: List[bytes]
 
-    def __init__(self, socket_file: str = "/run/bird.ctl"):
+    def __init__(self, socket_file: str = "/run/bird.ctl", debug=False):
         """Initialize the object."""
 
+        # Set debug flag
+        self._debug = debug
         # Set socket file
         self._socket_file = socket_file
         # Setup ending lines
@@ -656,7 +660,7 @@ class BirdClient:
         sock.connect(self._socket_file)
 
         # Send the query
-        sock.send(f"{query}\n".encode("ascii"))
+        sock.send(f"{query}\n".encode("UTF-8"))
 
         # Initialize byte array to store what we get back
         data = bytearray()
@@ -668,7 +672,6 @@ class BirdClient:
         done = False
         while not done:
             chunk = sock.recv(4096)
-            print(f"CHUNK: {chunk!r}")
             data.extend(chunk)
             # If the last bit of data ends us off in a newline, this may be the end of the stream
             if data.endswith(b"\n"):
@@ -684,5 +687,8 @@ class BirdClient:
         # Close socket
         sock.close()
 
+        if self._debug:
+            print(f"Bird Reply:\n{data.decode('UTF-8')}")
+
         # Convert data bytes to a string and split into lines
-        return data.decode("ascii").splitlines()
+        return data.decode("UTF-8").splitlines()
