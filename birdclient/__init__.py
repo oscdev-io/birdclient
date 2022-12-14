@@ -48,7 +48,7 @@ class BirdClient:
     # Ending lines for bird control channel
     _ending_lines: List[bytes]
 
-    def __init__(self, socket_file: str = "/run/bird.ctl", debug=False):
+    def __init__(self, socket_file: str = "/run/bird.ctl", debug: bool = False):
         """Initialize the object."""
 
         # Set debug flag
@@ -151,19 +151,22 @@ class BirdClient:
             )
             if match:
                 # Build up the protocol
-                protocol = {}
-                protocol["name"] = match.group("name")
-                protocol["proto"] = match.group("proto")
-                protocol["table"] = match.group("table")
-                protocol["state"] = match.group("state")
-                protocol["since"] = match.group("since")
-                protocol["info"] = match.group("info")
+                protocol = {
+                    "name": match.group("name"),
+                    "proto": match.group("proto"),
+                    "table": match.group("table"),
+                    "state": match.group("state"),
+                    "since": match.group("since"),
+                    "info": match.group("info"),
+                }
                 # Save protocol
                 res[protocol["name"]] = protocol
 
         return res
 
-    def show_route_table(self, table: str, data: Optional[List[str]] = None) -> Dict[Any, Any]:
+    def show_route_table(  # noqa: CFQ001  # pylint: disable=R0914,R0912,R0915
+        self, table: str, data: Optional[List[str]] = None
+    ) -> Dict[Any, Any]:
         """Return parsed BIRD routing table."""
 
         # Grab routes
@@ -248,11 +251,12 @@ class BirdClient:
                     line,
                 )
                 if match:
-                    source = {}
-                    source["prefix_type"] = match.group("prefix_type")
-                    source["protocol"] = match.group("protocol")
-                    source["since"] = match.group("since")
-                    source["pref"] = int(match.group("pref"))
+                    source = {
+                        "prefix_type": match.group("prefix_type"),
+                        "protocol": match.group("protocol"),
+                        "since": match.group("since"),
+                        "pref": int(match.group("pref")),
+                    }
                     # Check if we have a bestpath
                     bestpath = match.group("bestpath")
                     if bestpath:
@@ -280,10 +284,11 @@ class BirdClient:
                     line,
                 )
                 if match:
-                    source = {}
-                    source["prefix_type"] = match.group("prefix_type")
-                    source["protocol"] = match.group("protocol")
-                    source["since"] = match.group("since")
+                    source = {
+                        "prefix_type": match.group("prefix_type"),
+                        "protocol": match.group("protocol"),
+                        "since": match.group("since"),
+                    }
                     # Check if we got a 'from'
                     bgp_from = match.group("from")
                     if bgp_from:
@@ -299,7 +304,7 @@ class BirdClient:
                     # Check if we got a metric
                     metric = match.group("metric")
                     if metric:
-                        if metric == "-" or metric == "?":
+                        if metric in ("-", "?"):
                             source["metric"] = None
                         else:
                             source["metric"] = int(metric)
@@ -326,13 +331,14 @@ class BirdClient:
                     line,
                 )
                 if match:
-                    source = {}
-                    source["prefix_type"] = match.group("prefix_type")
-                    source["protocol"] = match.group("protocol")
-                    source["since"] = match.group("since")
-                    source["ospf_type"] = match.group("ospf_type")
-                    source["pref"] = int(match.group("pref"))
-                    source["metric1"] = int(match.group("metric1"))
+                    source = {
+                        "prefix_type": match.group("prefix_type"),
+                        "protocol": match.group("protocol"),
+                        "since": match.group("since"),
+                        "ospf_type": match.group("ospf_type"),
+                        "pref": int(match.group("pref")),
+                        "metric1": int(match.group("metric1")),
+                    }
                     # Check if we have a bestpath
                     bestpath = match.group("bestpath")
                     if bestpath:
@@ -363,12 +369,13 @@ class BirdClient:
                     line,
                 )
                 if match:
-                    source = {}
-                    source["prefix_type"] = match.group("prefix_type")
-                    source["protocol"] = match.group("protocol")
-                    source["since"] = match.group("since")
-                    source["pref"] = int(match.group("pref"))
-                    source["metric1"] = int(match.group("metric1"))
+                    source = {
+                        "prefix_type": match.group("prefix_type"),
+                        "protocol": match.group("protocol"),
+                        "since": match.group("since"),
+                        "pref": int(match.group("pref")),
+                        "metric1": int(match.group("metric1")),
+                    }
                     bestpath = match.group("bestpath")
                     if bestpath:
                         source["bestpath"] = True
@@ -469,8 +476,9 @@ class BirdClient:
                     line,
                 )
                 if match:
-                    nexthop = {}
-                    nexthop["interface"] = match.group("interface")
+                    nexthop = {
+                        "interface": match.group("interface"),
+                    }
                     # Check if we got an MPLS item
                     mpls = match.group("mpls")
                     if mpls:
@@ -549,22 +557,22 @@ class BirdClient:
                 # Special case for BGP.next_hop
                 elif attrib == "BGP.next_hop":
                     match_all = re.findall(r"(?P<next_hop>\S+)\s*", value)
-                    value = [x for x in match_all]
+                    value = list(match_all)
                 # Special case for BGP.origin
-                elif attrib == "BGP.origin":
+                elif attrib == "BGP.origin":  # noqa: SIM114
                     # Normal string
                     pass
                 # Special case for BGP.originator_id
-                elif attrib == "BGP.originator_id":
+                elif attrib == "BGP.originator_id":  # noqa: SIM114
                     # Normal string
                     pass
                 # Special case for BGP.cluster_list
-                elif attrib == "BGP.cluster_list":
+                elif attrib == "BGP.cluster_list":  # noqa: SIM114
                     # Normal string
                     pass
 
                 # Special case for OSPF.router_id
-                elif attrib == "OSPF.router_id":
+                elif attrib == "OSPF.router_id":  # noqa: SIM114
                     # Normal string
                     pass
                 # Special case for OSPF.tag

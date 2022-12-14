@@ -28,11 +28,11 @@ class TestBirdClient:
 
     def _load_file(self, filename: str) -> List[str]:
         """Read in a file and return the lines."""
-        with open(f"tests/{filename}", "r") as datafile:
+        with open(f"tests/{filename}", "r", encoding="UTF-8") as datafile:
             data = datafile.read()
         return data.splitlines()
 
-    def test_show_status(self):
+    def test_show_status(self) -> None:
         """Test show_status."""
 
         birdclient = BirdClient()
@@ -48,7 +48,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_status() result does not match what it should be"
 
-    def test_show_protocols(self):
+    def test_show_protocols(self) -> None:
         """Test show_protocols."""
 
         birdclient = BirdClient()
@@ -123,7 +123,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_protocols() result does not match what it should be"
 
-    def test_show_route_table_t_static4(self):
+    def test_show_route_table_t_static4(self) -> None:
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -156,7 +156,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_static6(self):
+    def test_show_route_table_t_static6(self) -> None:
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -189,7 +189,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_kernel4(self):
+    def test_show_route_table_t_kernel4(self) -> None:
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -253,7 +253,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_kernel6(self):
+    def test_show_route_table_t_kernel6(self) -> None:
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -306,7 +306,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_ospf4(self):
+    def test_show_route_table_t_ospf4(self) -> None:  # noqa: CFQ001
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -422,7 +422,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_ospf6_1(self):
+    def test_show_route_table_t_ospf6_1(self) -> None:
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -455,7 +455,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_ospf6_2(self):
+    def test_show_route_table_t_ospf6_2(self) -> None:
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -537,7 +537,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_bgp4(self):
+    def test_show_route_table_t_bgp4(self) -> None:
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -627,7 +627,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_bgp4_with_blackhole(self):
+    def test_show_route_table_t_bgp4_with_blackhole(self) -> None:
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -649,7 +649,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_bgp6(self):
+    def test_show_route_table_t_bgp6(self) -> None:  # noqa: CFQ001
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -760,7 +760,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_rip4(self):
+    def test_show_route_table_t_rip4(self) -> None:
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -792,7 +792,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_rip6(self):
+    def test_show_route_table_t_rip6(self) -> None:
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -824,7 +824,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_direct4(self):
+    def test_show_route_table_t_direct4(self) -> None:
         """Test show_route_table."""
 
         birdclient = BirdClient()
@@ -845,7 +845,7 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"
 
-    def test_show_route_table_t_direct6(self):
+    def test_show_route_table_t_direct6(self) -> None:
         """Test show_route_table."""
 
         birdclient = BirdClient()
