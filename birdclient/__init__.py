@@ -630,12 +630,12 @@ class BirdClient:
                     else:
                         raise BirdClientParseError("Unknown 'Kernel.source' attribute")
                 # Special case for RIP.tag
-                elif attrib == "RIP.tag":  # noqa: SIM114
+                elif attrib == "RIP.tag":
                     # This is a string (HEX)
                     pass
                 # NK: Bird quirk with 2.0.11, this is supposed to be hidden
                 elif attrib == "RIP.02":
-                    pass
+                    continue
                 # Finally if we don't understand the attribute
                 else:
                     raise BirdClientParseError(f"Failed to parse code 1012 attribute '{attrib}: {line}")
