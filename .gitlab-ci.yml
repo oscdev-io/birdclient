@@ -16,9 +16,9 @@ test_job:
   # Create environment
   - pacman -Syu --noconfirm
   - pacman -S --noconfirm grep python
-  - pacman -S --noconfirm python-pytest-runner python-pytest-cov python-pytest-black python-pytest-flake8 python-pytest-pycodestyle python-pytest-pydocstyle python-pytest-pylint python-pytest-mypy
+  - pacman -S --noconfirm python-tox
   # Run tests
-  - python setup.py test
+  - tox
 
 prepare_release:
   stage: prepare_release

@@ -1,7 +1,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Copyright (C) 2019-2020, AllWorldIT.
+# Copyright (C) 2019-2022, AllWorldIT.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -27,9 +27,12 @@ import os
 import re
 import socket
 from typing import Any, Dict, List, Optional
-from .exceptions import BirdClientError, BirdClientParseError
 
-__VERSION__ = "0.0.4"
+from .exceptions import BirdClientError, BirdClientParseError
+from .version import __version__
+
+__all__ = ["__version__", "BirdClient"]
+
 
 # Regex matches
 _SINCE_MATCH = r"(?P<since>(?:[0-9]{4}-[0-9]{2}-[0-9]{2} )?[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,3})?)"
