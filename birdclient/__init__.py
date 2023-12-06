@@ -26,7 +26,6 @@
 import os
 import re
 import socket
-import sys
 from typing import Any, Dict, List, Optional
 
 from .exceptions import BirdClientError, BirdClientParseError

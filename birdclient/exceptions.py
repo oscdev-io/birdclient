@@ -23,6 +23,8 @@
 
 """Exceptions for birdclient."""
 
+__all__ = ["BirdClientError", "BirdClientParseError"]
+
 
 class BirdClientError(RuntimeError):
     """Exception for our BIRD client."""

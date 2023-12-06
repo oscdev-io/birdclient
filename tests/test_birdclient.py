@@ -22,6 +22,8 @@ from typing import List
 
 from birdclient import BirdClient
 
+__all__ = ["TestBirdClient"]
+
 
 class TestBirdClient:
     """Test the BirdClient class."""
