@@ -1,6 +1,4 @@
 [build-system]
-#build-backend = "poetry.core.masonry.api"
-#requires = ["poetry-core", "setuptools"]
 requires = ["flit_core"]
 build-backend = "flit_core.buildapi"
 
