@@ -1,0 +1,20 @@
+0001 BIRD 2.14 ready.
+2002-Name       Proto      Table      State  Since         Info
+1002-bgp4_AS65000_as65000a BGP        ---        start  2023-12-06 14:26:45  Active        Socket: Connection refused
+1006-  Description:    AS65000
+       VRF:            default
+       BGP state:          Active
+         Neighbor address: 100.64.20.1
+         Neighbor AS:      65000
+         Local AS:         65001
+         Connect delay:    0.005/5
+         Last error:       Socket: Connection refused
+       Channel ipv4
+         State:          DOWN
+         Table:          t_bgp4_AS65000_as65000a_peer
+         Preference:     100
+         Input filter:   f_bgp_AS65000_as65000a_peer_import
+         Output filter:  f_bgp_AS65000_as65000a_peer_export
+         Import limit:   30
+           Action:       restart
+         IGP IPv4 table: master4

@@ -153,19 +153,39 @@ class BirdClient:
                 r"(?P<proto>\S+)\s+"
                 r"(?P<table>\S+)\s+"
                 r"(?P<state>\S+)\s+" + _SINCE_MATCH + r"\s+"
-                r"(?P<info>.*)",
+                r"(?P<info>\S+)\s*"
+                r"(?P<info_extra>.*)?",
                 line,
             )
             if match:
+                state = match.group("state").lower()
+                info = match.group("info").lower()
+                info_extra = match.group("info_extra")
+                # If the protocol is BGP and the state is "start", then the state is actually down
+                if match.group("proto") == "BGP":
+                    # Slighly modify our state
+                    if state == "start":
+                        state = "down"
+                    # And add the extra info separately if this is a BGP protocol
+                    info_extra = info_extra.lower()
+                # Else add the extra info onto info for all other protocols
+                else:
+                    # If we have extra info then add it onto info and blank it
+                    if info_extra:
+                        info += f" {info_extra}"
+                        info_extra = ""
+
                 # Build up the protocol
                 protocol = {
                     "name": match.group("name"),
                     "proto": match.group("proto"),
                     "table": match.group("table"),
-                    "state": match.group("state").lower(),
+                    "state": state,
                     "since": match.group("since"),
-                    "info": match.group("info").rstrip().lower(),
+                    "info": info,
                 }
+                if info_extra:
+                    protocol["info_extra"] = info_extra
                 # Save protocol
                 res[protocol["name"]] = protocol
 
@@ -233,6 +253,15 @@ class BirdClient:
             )
             if match:
                 res["local_as"] = int(match.group("local_as"))
+                continue
+
+            # Grab last error
+            match = re.match(
+                r"\s+Last error:\s+(?P<last_error>.*)",
+                line,
+            )
+            if match:
+                res["last_error"] = match.group("last_error").rstrip().lower()
                 continue
 
             # Grab neighbor ID

@@ -185,6 +185,58 @@ class TestBirdClient:
 
         assert result == correct_result, "The show_protocol6() result does not match what it should be"
 
+    def test_show_protocol4_down(self) -> None:
+        """Test show protocol for IPv4 when down."""
+
+        birdclient = BirdClient()
+        result = birdclient.show_protocol("bgp4_AS65000_as65000a", self._load_file("test_show_protocol4_down.txt"))
+
+        correct_result = {
+            "channel": "ipv4",
+            "igp_table": "master4",
+            "import_limit": 30,
+            "import_limit_action": "restart",
+            "info": "active",
+            "input_filter": "f_bgp_AS65000_as65000a_peer_import",
+            "last_error": "socket: connection refused",
+            "local_as": 65001,
+            "neighbor_address": "100.64.20.1",
+            "neighbor_as": 65000,
+            "output_filter": "f_bgp_AS65000_as65000a_peer_export",
+            "preference": 100,
+            "since": "2023-12-06 14:26:45",
+            "state": "down",
+            "table": "t_bgp4_AS65000_as65000a_peer",
+        }
+
+        assert result == correct_result, "The show_protocol4_down() result does not match what it should be"
+
+    def test_show_protocol6_down(self) -> None:
+        """Test show protocol for IPv6 when down."""
+
+        birdclient = BirdClient()
+        result = birdclient.show_protocol("bgp6_AS65000_as65000a", self._load_file("test_show_protocol6_down.txt"))
+
+        correct_result = {
+            "channel": "ipv6",
+            "igp_table": "master6",
+            "import_limit": 10,
+            "import_limit_action": "restart",
+            "info": "active",
+            "input_filter": "f_bgp_AS65000_as65000a_peer_import",
+            "last_error": "socket: connection refused",
+            "local_as": 65001,
+            "neighbor_address": "fc20::1",
+            "neighbor_as": 65000,
+            "output_filter": "f_bgp_AS65000_as65000a_peer_export",
+            "preference": 100,
+            "since": "2023-12-06 14:26:45",
+            "state": "down",
+            "table": "t_bgp6_AS65000_as65000a_peer",
+        }
+
+        assert result == correct_result, "The show_protocol6_down() result does not match what it should be"
+
     def test_show_route_table_t_static4(self) -> None:
         """Test show_route_table."""
 
