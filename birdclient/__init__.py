@@ -44,17 +44,24 @@ class BirdClient:
     # Debug flag
     _debug: bool
     # Socket file
-    _socket_file: str
+    _socket_file: Optional[str]
     # Ending lines for bird control channel
     _ending_lines: List[bytes]
 
-    def __init__(self, socket_file: str = "/run/bird.ctl", debug: bool = False):
+    def __init__(self, socket_file: Optional[str] = None, debug: bool = False):
         """Initialize the object."""
 
         # Set debug flag
         self._debug = debug
-        # Set socket file
+
+        # Work out which bird socket file to use
         self._socket_file = socket_file
+        if not self._socket_file:
+            for bird_socket_file in ["/run/bird.ctl", "/run/bird/bird.ctl"]:
+                if os.path.exists(bird_socket_file):
+                    self._socket_file = bird_socket_file
+                    break
+
         # Setup ending lines
         self._ending_lines = [
             b"0000 ",
@@ -155,12 +162,199 @@ class BirdClient:
                     "name": match.group("name"),
                     "proto": match.group("proto"),
                     "table": match.group("table"),
-                    "state": match.group("state"),
+                    "state": match.group("state").lower(),
                     "since": match.group("since"),
-                    "info": match.group("info"),
+                    "info": match.group("info").rstrip().lower(),
                 }
                 # Save protocol
                 res[protocol["name"]] = protocol
+
+        return res
+
+    def show_protocol(  # noqa: CFQ001 # pylint: disable=R0912,R0915
+        self, protocol: str, data: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
+        """Return parsed BIRD protocol."""
+
+        # Grab protocols
+        if not data:  # pragma: no cover
+            data = self.query(f'show protocols all "{protocol}"')
+
+        res: Dict[str, Any] = {}
+
+        # Loop with data to grab information we need
+        for line in data:
+            # Grab summary
+            # Grab BIRD version
+            match = re.match(
+                r"^(?:1002-| )"
+                r"(?P<name>\S+)\s+"
+                r"(?P<proto>\S+)\s+"
+                r"(?P<table>\S+)\s+"
+                r"(?P<state>\S+)\s+" + _SINCE_MATCH + r"\s+"
+                r"(?P<info>.*)",
+                line,
+            )
+            if match:
+                # Add since
+                res["since"] = match.group("since")
+
+            # Grab BGP state
+            match = re.match(
+                r"\s+BGP state:\s+(?P<bgp_state>\S+)",
+                line,
+            )
+            if match:
+                res["info"] = match.group("bgp_state").lower()
+                continue
+
+            # Grab neighbor address
+            match = re.match(
+                r"\s+Neighbor address:\s+(?P<neighbor_address>\S+)",
+                line,
+            )
+            if match:
+                res["neighbor_address"] = match.group("neighbor_address")
+                continue
+
+            # Grab neighbor AS
+            match = re.match(
+                r"\s+Neighbor AS:\s+(?P<neighbor_as>\S+)",
+                line,
+            )
+            if match:
+                res["neighbor_as"] = int(match.group("neighbor_as"))
+                continue
+
+            # Grab local AS
+            match = re.match(
+                r"\s+Local AS:\s+(?P<local_as>\S+)",
+                line,
+            )
+            if match:
+                res["local_as"] = int(match.group("local_as"))
+                continue
+
+            # Grab neighbor ID
+            match = re.match(
+                r"\s+Neighbor ID:\s+(?P<neighbor_id>\S+)",
+                line,
+            )
+            if match:
+                res["neighbor_id"] = match.group("neighbor_id")
+                continue
+
+            # Grab source address
+            match = re.match(
+                r"\s+Source address:\s+(?P<source_address>\S+)",
+                line,
+            )
+            if match:
+                res["source_address"] = match.group("source_address")
+                continue
+
+            # Grab channel
+            match = re.match(
+                r"\s+Channel (?P<channel>\S+)",
+                line,
+            )
+            if match:
+                res["channel"] = match.group("channel").lower()
+                continue
+
+            # Grab state
+            match = re.match(
+                r"\s+State:\s+(?P<state>\S+)",
+                line,
+            )
+            if match:
+                res["state"] = match.group("state").lower()
+                continue
+
+            # Grab table
+            match = re.match(
+                r"\s+Table:\s+(?P<table>\S+)",
+                line,
+            )
+            if match:
+                res["table"] = match.group("table")
+                continue
+
+            # Grab preference
+            match = re.match(
+                r"\s+Preference:\s+(?P<preference>\S+)",
+                line,
+            )
+            if match:
+                res["preference"] = int(match.group("preference"))
+                continue
+
+            # Grab input filter
+            match = re.match(
+                r"\s+Input filter:\s+(?P<input_filter>\S+)",
+                line,
+            )
+            if match:
+                res["input_filter"] = match.group("input_filter")
+                continue
+
+            # Grab output filter
+            match = re.match(
+                r"\s+Output filter:\s+(?P<output_filter>\S+)",
+                line,
+            )
+            if match:
+                res["output_filter"] = match.group("output_filter")
+                continue
+
+            # Grab import limit
+            match = re.match(
+                r"\s+Import limit:\s+(?P<import_limit>\S+)",
+                line,
+            )
+            if match:
+                res["import_limit"] = int(match.group("import_limit"))
+                continue
+
+            # Grab import limit action
+            match = re.match(
+                r"\s+Action:\s+(?P<import_limit_action>\S+)",
+                line,
+            )
+            if match:
+                res["import_limit_action"] = match.group("import_limit_action")
+                continue
+
+            # Grab route count
+            match = re.match(
+                r"\s+Routes:\s+"
+                r"(?P<routes_imported>\d+) imported, "
+                r"(?P<routes_exported>\d+) exported, "
+                r"(?P<routes_preferred>\d+) preferred",
+                line,
+            )
+            if match:
+                res["routes_imported"] = int(match.group("routes_imported"))
+                res["routes_exported"] = int(match.group("routes_exported"))
+                continue
+
+            # Grab BGP next hop
+            match = re.match(
+                r"\s+BGP Next hop:\s+(?P<bgp_next_hop>\S+)",
+                line,
+            )
+            if match:
+                res["bgp_nexthop"] = match.group("bgp_next_hop")
+                continue
+
+            # Grab IGP table
+            match = re.match(
+                r"\s+IGP IPv[46] table:\s+(?P<igp_table>\S+)",
+                line,
+            )
+            if match:
+                res["igp_table"] = match.group("igp_table")
+                continue
 
         return res
 
@@ -663,12 +857,12 @@ class BirdClient:
     def query(self, query: str) -> List[str]:  # pragma: no cover
         """Open a socket to the BIRD daemon, send the query and get the response."""
 
+        # Make sure socket file is set and it exists else throw a client error
+        if not self._socket_file or not os.path.exists(self._socket_file):
+            raise BirdClientError(f"Failed to find BIRD socket file '{self._socket_file}'")
+
         # Create a unix socket
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-
-        # Make sure bird socket exists first...
-        if not os.path.exists(self._socket_file):
-            raise BirdClientError(f"BIRD socket '{self._socket_file}' does not exist")
 
         # Connect to the BIRD daemon
         sock.connect(self._socket_file)
