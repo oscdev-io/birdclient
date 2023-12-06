@@ -58,7 +58,7 @@ class TestBirdClient:
 
         correct_result = {
             "ospf4": {
-                "info": "Alone",
+                "info": "alone",
                 "name": "ospf4",
                 "proto": "OSPF",
                 "since": "2019-09-01 13:13:28",
@@ -66,7 +66,7 @@ class TestBirdClient:
                 "table": "t_ospf4",
             },
             "ospf6": {
-                "info": "Running",
+                "info": "running",
                 "name": "ospf6",
                 "proto": "OSPF",
                 "since": "2019-09-01 13:13:28",

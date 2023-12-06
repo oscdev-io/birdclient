@@ -162,9 +162,9 @@ class BirdClient:
                     "name": match.group("name"),
                     "proto": match.group("proto"),
                     "table": match.group("table"),
-                    "state": match.group("state"),
+                    "state": match.group("state").lower(),
                     "since": match.group("since"),
-                    "info": match.group("info"),
+                    "info": match.group("info").rstrip().lower(),
                 }
                 # Save protocol
                 res[protocol["name"]] = protocol
