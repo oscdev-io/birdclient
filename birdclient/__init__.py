@@ -171,6 +171,193 @@ class BirdClient:
 
         return res
 
+    def show_protocol(  # noqa: CFQ001 # pylint: disable=R0912,R0915
+        self, protocol: str, data: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
+        """Return parsed BIRD protocol."""
+
+        # Grab protocols
+        if not data:  # pragma: no cover
+            data = self.query(f'show protocols all "{protocol}"')
+
+        res: Dict[str, Any] = {}
+
+        # Loop with data to grab information we need
+        for line in data:
+            # Grab summary
+            # Grab BIRD version
+            match = re.match(
+                r"^(?:1002-| )"
+                r"(?P<name>\S+)\s+"
+                r"(?P<proto>\S+)\s+"
+                r"(?P<table>\S+)\s+"
+                r"(?P<state>\S+)\s+" + _SINCE_MATCH + r"\s+"
+                r"(?P<info>.*)",
+                line,
+            )
+            if match:
+                # Add since
+                res["since"] = match.group("since")
+
+            # Grab BGP state
+            match = re.match(
+                r"\s+BGP state:\s+(?P<bgp_state>\S+)",
+                line,
+            )
+            if match:
+                res["info"] = match.group("bgp_state").lower()
+                continue
+
+            # Grab neighbor address
+            match = re.match(
+                r"\s+Neighbor address:\s+(?P<neighbor_address>\S+)",
+                line,
+            )
+            if match:
+                res["neighbor_address"] = match.group("neighbor_address")
+                continue
+
+            # Grab neighbor AS
+            match = re.match(
+                r"\s+Neighbor AS:\s+(?P<neighbor_as>\S+)",
+                line,
+            )
+            if match:
+                res["neighbor_as"] = int(match.group("neighbor_as"))
+                continue
+
+            # Grab local AS
+            match = re.match(
+                r"\s+Local AS:\s+(?P<local_as>\S+)",
+                line,
+            )
+            if match:
+                res["local_as"] = int(match.group("local_as"))
+                continue
+
+            # Grab neighbor ID
+            match = re.match(
+                r"\s+Neighbor ID:\s+(?P<neighbor_id>\S+)",
+                line,
+            )
+            if match:
+                res["neighbor_id"] = match.group("neighbor_id")
+                continue
+
+            # Grab source address
+            match = re.match(
+                r"\s+Source address:\s+(?P<source_address>\S+)",
+                line,
+            )
+            if match:
+                res["source_address"] = match.group("source_address")
+                continue
+
+            # Grab channel
+            match = re.match(
+                r"\s+Channel (?P<channel>\S+)",
+                line,
+            )
+            if match:
+                res["channel"] = match.group("channel").lower()
+                continue
+
+            # Grab state
+            match = re.match(
+                r"\s+State:\s+(?P<state>\S+)",
+                line,
+            )
+            if match:
+                res["state"] = match.group("state").lower()
+                continue
+
+            # Grab table
+            match = re.match(
+                r"\s+Table:\s+(?P<table>\S+)",
+                line,
+            )
+            if match:
+                res["table"] = match.group("table")
+                continue
+
+            # Grab preference
+            match = re.match(
+                r"\s+Preference:\s+(?P<preference>\S+)",
+                line,
+            )
+            if match:
+                res["preference"] = int(match.group("preference"))
+                continue
+
+            # Grab input filter
+            match = re.match(
+                r"\s+Input filter:\s+(?P<input_filter>\S+)",
+                line,
+            )
+            if match:
+                res["input_filter"] = match.group("input_filter")
+                continue
+
+            # Grab output filter
+            match = re.match(
+                r"\s+Output filter:\s+(?P<output_filter>\S+)",
+                line,
+            )
+            if match:
+                res["output_filter"] = match.group("output_filter")
+                continue
+
+            # Grab import limit
+            match = re.match(
+                r"\s+Import limit:\s+(?P<import_limit>\S+)",
+                line,
+            )
+            if match:
+                res["import_limit"] = int(match.group("import_limit"))
+                continue
+
+            # Grab import limit action
+            match = re.match(
+                r"\s+Action:\s+(?P<import_limit_action>\S+)",
+                line,
+            )
+            if match:
+                res["import_limit_action"] = match.group("import_limit_action")
+                continue
+
+            # Grab route count
+            match = re.match(
+                r"\s+Routes:\s+"
+                r"(?P<routes_imported>\d+) imported, "
+                r"(?P<routes_exported>\d+) exported, "
+                r"(?P<routes_preferred>\d+) preferred",
+                line,
+            )
+            if match:
+                res["routes_imported"] = int(match.group("routes_imported"))
+                res["routes_exported"] = int(match.group("routes_exported"))
+                continue
+
+            # Grab BGP next hop
+            match = re.match(
+                r"\s+BGP Next hop:\s+(?P<bgp_next_hop>\S+)",
+                line,
+            )
+            if match:
+                res["bgp_nexthop"] = match.group("bgp_next_hop")
+                continue
+
+            # Grab IGP table
+            match = re.match(
+                r"\s+IGP IPv[46] table:\s+(?P<igp_table>\S+)",
+                line,
+            )
+            if match:
+                res["igp_table"] = match.group("igp_table")
+                continue
+
+        return res
+
     def show_route_table(  # noqa: CFQ001  # pylint: disable=R0914,R0912,R0915
         self, table: str, data: Optional[List[str]] = None
     ) -> Dict[Any, Any]:

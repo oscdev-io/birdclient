@@ -1,0 +1,44 @@
+0001 BIRD 2.14 ready.
+2002-Name       Proto      Table      State  Since         Info
+1002-bgp4_AS65000_as65000 BGP        ---        up     2023-12-04 22:25:36  Established
+1006-  Description:    AS65000 as65000 - 65000::as65000::peering@example.com
+       VRF:            default
+       BGP state:          Established
+         Neighbor address: 100.64.20.1
+         Neighbor AS:      65000
+         Local AS:         65001
+         Neighbor ID:      100.64.20.1
+         Local capabilities
+           Multiprotocol
+             AF announced: ipv4
+           Route refresh
+           Graceful restart
+           4-octet AS numbers
+           Enhanced refresh
+           Long-lived graceful restart
+         Neighbor capabilities
+           Multiprotocol
+             AF announced: ipv4
+           Route refresh
+           4-octet AS numbers
+           Enhanced refresh
+         Session:          external AS4
+         Source address:   100.64.20.2
+         Hold timer:       129.907/180
+         Keepalive timer:  20.911/60
+       Channel ipv4
+         State:          UP
+         Table:          t_bgp4_AS65000_as65000_peer
+         Preference:     100
+         Input filter:   f_bgp_AS65000_as65000_peer_import
+         Output filter:  f_bgp_AS65000_as65000_peer_export
+         Import limit:   400
+           Action:       restart
+         Routes:         70 imported, 24 exported, 70 preferred
+         Route change stats:     received   rejected   filtered    ignored   accepted
+           Import updates:             77          0          0          0         77
+           Import withdraws:            7          0        ---          0          7
+           Export updates:            106         77          0        ---         29
+           Export withdraws:            7        ---        ---        ---          0
+         BGP Next hop:   100.64.20.2
+         IGP IPv4 table: master4
