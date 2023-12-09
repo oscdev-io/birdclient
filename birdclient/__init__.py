@@ -44,22 +44,22 @@ class BirdClient:
     # Debug flag
     _debug: bool
     # Socket file
-    _socket_file: Optional[str]
+    _control_socket: Optional[str]
     # Ending lines for bird control channel
     _ending_lines: List[bytes]
 
-    def __init__(self, socket_file: Optional[str] = None, debug: bool = False):
+    def __init__(self, control_socket: Optional[str] = None, debug: bool = False):
         """Initialize the object."""
 
         # Set debug flag
         self._debug = debug
 
         # Work out which bird socket file to use
-        self._socket_file = socket_file
-        if not self._socket_file:
+        self._control_socket = control_socket
+        if not self._control_socket:
             for bird_socket_file in ["/run/bird.ctl", "/run/bird/bird.ctl"]:
                 if os.path.exists(bird_socket_file):
-                    self._socket_file = bird_socket_file
+                    self._control_socket = bird_socket_file
                     break
 
         # Setup ending lines
@@ -887,14 +887,16 @@ class BirdClient:
         """Open a socket to the BIRD daemon, send the query and get the response."""
 
         # Make sure socket file is set and it exists else throw a client error
-        if not self._socket_file or not os.path.exists(self._socket_file):
-            raise BirdClientError(f"Failed to find BIRD socket file '{self._socket_file}'")
+        if not self._control_socket:
+            raise BirdClientError("Failed to find BIRD socket file")
+        if not os.path.exists(self._control_socket):
+            raise BirdClientError(f"BIRD socket file '{self._control_socket}' does not exist")
 
         # Create a unix socket
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 
         # Connect to the BIRD daemon
-        sock.connect(self._socket_file)
+        sock.connect(self._control_socket)
 
         # Send the query
         sock.send(f"{query}\n".encode("UTF-8"))
