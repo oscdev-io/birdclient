@@ -158,6 +158,7 @@ class BirdClient:
                 line,
             )
             if match:
+                table = match.group("table")
                 state = match.group("state").lower()
                 info = match.group("info").lower()
                 info_extra = match.group("info_extra")
@@ -175,15 +176,23 @@ class BirdClient:
                         info += f" {info_extra}"
                         info_extra = ""
 
+                # Change info when it is "active" to "connect" as it swaps between the two
+                if info in ("active", "connect"):
+                    info = "connecting"
+                # Next change "passive" to "wait"
+                elif info == "passive":
+                    info = "waiting"
+
                 # Build up the protocol
                 protocol = {
                     "name": match.group("name"),
                     "proto": match.group("proto"),
-                    "table": match.group("table"),
                     "state": state,
                     "since": match.group("since"),
                     "info": info,
                 }
+                if table != "---":
+                    protocol["table"] = table
                 if info_extra:
                     protocol["info_extra"] = info_extra
                 # Save protocol

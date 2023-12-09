@@ -79,7 +79,6 @@ class TestBirdClient:
                 "proto": "Pipe",
                 "since": "2019-09-01 13:13:28",
                 "state": "up",
-                "table": "---",
             },
             "p_ospf4_to_static4": {
                 "info": "t_ospf4 <=> t_static4",
@@ -87,7 +86,6 @@ class TestBirdClient:
                 "proto": "Pipe",
                 "since": "2019-09-01 13:13:28",
                 "state": "up",
-                "table": "---",
             },
             "p_ospf6_to_kernel6": {
                 "info": "t_ospf6 <=> t_kernel6",
@@ -95,7 +93,6 @@ class TestBirdClient:
                 "proto": "Pipe",
                 "since": "2019-09-01 13:13:28",
                 "state": "up",
-                "table": "---",
             },
             "p_ospf6_to_static6": {
                 "info": "t_ospf6 <=> t_static6",
@@ -103,7 +100,6 @@ class TestBirdClient:
                 "proto": "Pipe",
                 "since": "2019-09-01 13:13:28",
                 "state": "up",
-                "table": "---",
             },
             "p_static4_to_kernel4": {
                 "info": "t_static4 <=> t_kernel4",
@@ -111,7 +107,6 @@ class TestBirdClient:
                 "proto": "Pipe",
                 "since": "2019-09-01 13:13:28",
                 "state": "up",
-                "table": "---",
             },
             "p_static6_to_kernel6": {
                 "info": "t_static6 <=> t_kernel6",
@@ -119,7 +114,6 @@ class TestBirdClient:
                 "proto": "Pipe",
                 "since": "2019-09-01 13:13:28",
                 "state": "up",
-                "table": "---",
             },
         }
 
