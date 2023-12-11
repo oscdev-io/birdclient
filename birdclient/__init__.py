@@ -1,7 +1,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Copyright (C) 2019-2022, AllWorldIT.
+# Copyright (C) 2019-2023, AllWorldIT.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -44,22 +44,22 @@ class BirdClient:
     # Debug flag
     _debug: bool
     # Socket file
-    _socket_file: Optional[str]
+    _control_socket: Optional[str]
     # Ending lines for bird control channel
     _ending_lines: List[bytes]
 
-    def __init__(self, socket_file: Optional[str] = None, debug: bool = False):
+    def __init__(self, control_socket: Optional[str] = None, debug: bool = False):
         """Initialize the object."""
 
         # Set debug flag
         self._debug = debug
 
         # Work out which bird socket file to use
-        self._socket_file = socket_file
-        if not self._socket_file:
+        self._control_socket = control_socket
+        if not self._control_socket:  # pragma: no cover
             for bird_socket_file in ["/run/bird.ctl", "/run/bird/bird.ctl"]:
                 if os.path.exists(bird_socket_file):
-                    self._socket_file = bird_socket_file
+                    self._control_socket = bird_socket_file
                     break
 
         # Setup ending lines
@@ -153,19 +153,53 @@ class BirdClient:
                 r"(?P<proto>\S+)\s+"
                 r"(?P<table>\S+)\s+"
                 r"(?P<state>\S+)\s+" + _SINCE_MATCH + r"\s+"
-                r"(?P<info>.*)",
+                r"(?P<info>\S+)\s*"
+                r"(?P<info_extra>.*)?",
                 line,
             )
             if match:
+                table = match.group("table")
+                state = match.group("state").lower()
+                info = match.group("info").lower()
+                info_extra = match.group("info_extra")
+                # If the protocol is BGP and the state is "start", then the state is actually down
+                if match.group("proto") == "BGP":
+                    # Slighly modify our state
+                    if state == "start":
+                        state = "down"
+                    # And add the extra info separately if this is a BGP protocol
+                    info_extra = info_extra.lower()
+
+                    # Change info when it is "active" to "connect" as it swaps between the two
+                    if info in ("active", "connect"):
+                        info = "connecting"
+                    # Next change "passive" to "wait"
+                    elif info == "passive":
+                        info = "waiting"
+                # Check if this is OSPF
+                elif match.group("proto") == "OSPF":
+                    # If info shows alone it means the state is actually down
+                    if info == "alone":
+                        state = "down"
+                # Else add the extra info onto info for all other protocols
+                else:
+                    # If we have extra info then add it onto info and blank it
+                    if info_extra:
+                        info += f" {info_extra}"
+                        info_extra = ""
+
                 # Build up the protocol
                 protocol = {
                     "name": match.group("name"),
                     "proto": match.group("proto"),
-                    "table": match.group("table"),
-                    "state": match.group("state").lower(),
+                    "state": state,
                     "since": match.group("since"),
-                    "info": match.group("info").rstrip().lower(),
+                    "info": info,
                 }
+                if table != "---":
+                    protocol["table"] = table
+                if info_extra:
+                    protocol["info_extra"] = info_extra
                 # Save protocol
                 res[protocol["name"]] = protocol
 
@@ -233,6 +267,15 @@ class BirdClient:
             )
             if match:
                 res["local_as"] = int(match.group("local_as"))
+                continue
+
+            # Grab last error
+            match = re.match(
+                r"\s+Last error:\s+(?P<last_error>.*)",
+                line,
+            )
+            if match:
+                res["last_error"] = match.group("last_error").rstrip().lower()
                 continue
 
             # Grab neighbor ID
@@ -858,14 +901,16 @@ class BirdClient:
         """Open a socket to the BIRD daemon, send the query and get the response."""
 
         # Make sure socket file is set and it exists else throw a client error
-        if not self._socket_file or not os.path.exists(self._socket_file):
-            raise BirdClientError(f"Failed to find BIRD socket file '{self._socket_file}'")
+        if not self._control_socket:
+            raise BirdClientError("Failed to find BIRD socket file")
+        if not os.path.exists(self._control_socket):
+            raise BirdClientError(f"BIRD socket file '{self._control_socket}' does not exist")
 
         # Create a unix socket
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 
         # Connect to the BIRD daemon
-        sock.connect(self._socket_file)
+        sock.connect(self._control_socket)
 
         # Send the query
         sock.send(f"{query}\n".encode("UTF-8"))

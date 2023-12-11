@@ -1,0 +1,20 @@
+0001 BIRD 2.14 ready.
+2002-Name       Proto      Table      State  Since         Info
+1002-bgp6_AS65000_as65000a BGP        ---        start  2023-12-06 14:26:45  Active        Socket: Connection refused
+1006-  Description:    AS65000 as65000a - 65000::as65000a::Amazon IVS / Twitch
+       VRF:            default
+       BGP state:          Active
+         Neighbor address: fc20::1
+         Neighbor AS:      65000
+         Local AS:         65001
+         Connect delay:    2.629/5
+         Last error:       Socket: Connection refused
+       Channel ipv6
+         State:          DOWN
+         Table:          t_bgp6_AS65000_as65000a_peer
+         Preference:     100
+         Input filter:   f_bgp_AS65000_as65000a_peer_import
+         Output filter:  f_bgp_AS65000_as65000a_peer_export
+         Import limit:   10
+           Action:       restart
+         IGP IPv6 table: master6
