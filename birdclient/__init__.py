@@ -56,7 +56,7 @@ class BirdClient:
 
         # Work out which bird socket file to use
         self._control_socket = control_socket
-        if not self._control_socket:
+        if not self._control_socket:  # pragma: no cover
             for bird_socket_file in ["/run/bird.ctl", "/run/bird/bird.ctl"]:
                 if os.path.exists(bird_socket_file):
                     self._control_socket = bird_socket_file
@@ -169,19 +169,24 @@ class BirdClient:
                         state = "down"
                     # And add the extra info separately if this is a BGP protocol
                     info_extra = info_extra.lower()
+
+                    # Change info when it is "active" to "connect" as it swaps between the two
+                    if info in ("active", "connect"):
+                        info = "connecting"
+                    # Next change "passive" to "wait"
+                    elif info == "passive":
+                        info = "waiting"
+                # Check if this is OSPF
+                elif match.group("proto") == "OSPF":
+                    # If info shows alone it means the state is actually down
+                    if info == "alone":
+                        state = "down"
                 # Else add the extra info onto info for all other protocols
                 else:
                     # If we have extra info then add it onto info and blank it
                     if info_extra:
                         info += f" {info_extra}"
                         info_extra = ""
-
-                # Change info when it is "active" to "connect" as it swaps between the two
-                if info in ("active", "connect"):
-                    info = "connecting"
-                # Next change "passive" to "wait"
-                elif info == "passive":
-                    info = "waiting"
 
                 # Build up the protocol
                 protocol = {
