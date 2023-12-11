@@ -135,7 +135,7 @@ class BirdClient:
 
         return res
 
-    def show_protocols(self, data: Optional[List[str]] = None) -> Dict[str, Any]:
+    def show_protocols(self, data: Optional[List[str]] = None) -> Dict[str, Any]:  # pylint: disable=too-many-branches
         """Return parsed BIRD protocols."""
 
         # Grab protocols
@@ -153,14 +153,17 @@ class BirdClient:
                 r"(?P<proto>\S+)\s+"
                 r"(?P<table>\S+)\s+"
                 r"(?P<state>\S+)\s+" + _SINCE_MATCH + r"\s+"
-                r"(?P<info>\S+)\s*"
+                r"(?P<info>\S+)?\s*"
                 r"(?P<info_extra>.*)?",
                 line,
             )
             if match:
                 table = match.group("table")
                 state = match.group("state").lower()
-                info = match.group("info").lower()
+                info = match.group("info")
+                # If we have info, lowercase it
+                if info:
+                    info = info.lower()
                 info_extra = match.group("info_extra")
                 # If the protocol is BGP and the state is "start", then the state is actually down
                 if match.group("proto") == "BGP":
