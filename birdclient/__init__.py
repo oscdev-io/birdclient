@@ -31,7 +31,7 @@ from typing import Any, Dict, List, Optional
 from .exceptions import BirdClientError, BirdClientParseError
 from .version import __version__
 
-__all__ = ["__version__", "BirdClient"]
+__all__ = ["__version__", "BirdClient", "BirdClientError", "BirdClientParseError"]
 
 
 # Regex matches
