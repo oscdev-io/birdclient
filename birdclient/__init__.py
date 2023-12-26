@@ -26,12 +26,12 @@
 import os
 import re
 import socket
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
-from .exceptions import BirdClientError, BirdClientParseError
+from .exceptions import BirdClientError, BirdClientNotFoundError, BirdClientParseError
 from .version import __version__
 
-__all__ = ["__version__", "BirdClient", "BirdClientError", "BirdClientParseError"]
+__all__ = ["__version__", "BirdClient", "BirdClientError", "BirdClientParseError", "BirdClientNotFoundError"]
 
 
 # Regex matches
@@ -99,7 +99,7 @@ class BirdClient:
 
         # Grab status
         if not data:  # pragma: no cover
-            data = self.query("show status")
+            data = self.query(["show", "status"])
 
         # Return structure
         res = {
@@ -135,18 +135,36 @@ class BirdClient:
 
         return res
 
-    def show_protocols(self, data: Optional[List[str]] = None) -> Dict[str, Any]:  # pylint: disable=too-many-branches
-        """Return parsed BIRD protocols."""
+    def show_protocol(self, protocol: str, data: Optional[List[str]] = None) -> Dict[str, Any]:  # pylint: disable=too-many-branches
+        """Return parsed BIRD protocol."""
+
+        res = self.show_protocols(args=[protocol], data=data)
+        print(f"RES: {res}")
+        if protocol not in res:
+            raise BirdClientNotFoundError(f"Protocol '{protocol}' not found")
+
+        return res[protocol]
+
+    def show_protocols(  # noqa: CFQ001 # pylint: disable=R0912,R0915
+        self, args: Optional[List[str]] = None, data: Optional[List[str]] = None
+    ) -> Dict[str, Dict[str, Any]]:
+        """Return parsed BIRD protocol."""
 
         # Grab protocols
         if not data:  # pragma: no cover
-            data = self.query("show protocols")
+            # Build query
+            query = ["show", "protocols", "all"]
+            if args:
+                query.extend(args)
+            # Send query to BIRD
+            data = self.query(query)
 
-        res = {}
+        res: Dict[str, Any] = {}
 
         # Loop with data to grab information we need
+        protocol: Dict[str, Any] = {}
         for line in data:
-            # Grab BIRD version
+            # Grab summary
             match = re.match(
                 r"^(?:1002-| )"
                 r"(?P<name>\S+)\s+"
@@ -191,9 +209,11 @@ class BirdClient:
                         info += f" {info_extra}"
                         info_extra = ""
 
+                protocol_name = match.group("name")
+
                 # Build up the protocol
                 protocol = {
-                    "name": match.group("name"),
+                    "name": protocol_name,
                     "proto": match.group("proto"),
                     "state": state,
                     "since": match.group("since"),
@@ -206,43 +226,13 @@ class BirdClient:
                 # Save protocol
                 res[protocol["name"]] = protocol
 
-        return res
-
-    def show_protocol(  # noqa: CFQ001 # pylint: disable=R0912,R0915
-        self, protocol: str, data: Optional[List[str]] = None
-    ) -> Dict[str, Any]:
-        """Return parsed BIRD protocol."""
-
-        # Grab protocols
-        if not data:  # pragma: no cover
-            data = self.query(f'show protocols all "{protocol}"')
-
-        res: Dict[str, Any] = {}
-
-        # Loop with data to grab information we need
-        for line in data:
-            # Grab summary
-            # Grab BIRD version
-            match = re.match(
-                r"^(?:1002-| )"
-                r"(?P<name>\S+)\s+"
-                r"(?P<proto>\S+)\s+"
-                r"(?P<table>\S+)\s+"
-                r"(?P<state>\S+)\s+" + _SINCE_MATCH + r"\s+"
-                r"(?P<info>.*)",
-                line,
-            )
-            if match:
-                # Add since
-                res["since"] = match.group("since")
-
             # Grab BGP state
             match = re.match(
                 r"\s+BGP state:\s+(?P<bgp_state>\S+)",
                 line,
             )
             if match:
-                res["info"] = match.group("bgp_state").lower()
+                protocol["info"] = match.group("bgp_state").lower()
                 continue
 
             # Grab neighbor address
@@ -251,7 +241,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["neighbor_address"] = match.group("neighbor_address")
+                protocol["neighbor_address"] = match.group("neighbor_address")
                 continue
 
             # Grab neighbor AS
@@ -260,7 +250,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["neighbor_as"] = int(match.group("neighbor_as"))
+                protocol["neighbor_as"] = int(match.group("neighbor_as"))
                 continue
 
             # Grab local AS
@@ -269,7 +259,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["local_as"] = int(match.group("local_as"))
+                protocol["local_as"] = int(match.group("local_as"))
                 continue
 
             # Grab last error
@@ -278,7 +268,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["last_error"] = match.group("last_error").rstrip().lower()
+                protocol["last_error"] = match.group("last_error").rstrip().lower()
                 continue
 
             # Grab neighbor ID
@@ -287,7 +277,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["neighbor_id"] = match.group("neighbor_id")
+                protocol["neighbor_id"] = match.group("neighbor_id")
                 continue
 
             # Grab source address
@@ -296,7 +286,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["source_address"] = match.group("source_address")
+                protocol["source_address"] = match.group("source_address")
                 continue
 
             # Grab channel
@@ -305,7 +295,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["channel"] = match.group("channel").lower()
+                protocol["channel"] = match.group("channel").lower()
                 continue
 
             # Grab state
@@ -314,7 +304,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["state"] = match.group("state").lower()
+                protocol["state"] = match.group("state").lower()
                 continue
 
             # Grab table
@@ -323,7 +313,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["table"] = match.group("table")
+                protocol["table"] = match.group("table")
                 continue
 
             # Grab preference
@@ -332,7 +322,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["preference"] = int(match.group("preference"))
+                protocol["preference"] = int(match.group("preference"))
                 continue
 
             # Grab input filter
@@ -341,7 +331,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["input_filter"] = match.group("input_filter")
+                protocol["input_filter"] = match.group("input_filter")
                 continue
 
             # Grab output filter
@@ -350,7 +340,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["output_filter"] = match.group("output_filter")
+                protocol["output_filter"] = match.group("output_filter")
                 continue
 
             # Grab import limit
@@ -359,7 +349,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["import_limit"] = int(match.group("import_limit"))
+                protocol["import_limit"] = int(match.group("import_limit"))
                 continue
 
             # Grab import limit action
@@ -368,7 +358,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["import_limit_action"] = match.group("import_limit_action")
+                protocol["import_limit_action"] = match.group("import_limit_action")
                 continue
 
             # Grab route count
@@ -380,8 +370,8 @@ class BirdClient:
                 line,
             )
             if match:
-                res["routes_imported"] = int(match.group("routes_imported"))
-                res["routes_exported"] = int(match.group("routes_exported"))
+                protocol["routes_imported"] = int(match.group("routes_imported"))
+                protocol["routes_exported"] = int(match.group("routes_exported"))
                 continue
 
             # Grab BGP next hop
@@ -390,7 +380,7 @@ class BirdClient:
                 line,
             )
             if match:
-                res["bgp_nexthop"] = match.group("bgp_next_hop")
+                protocol["bgp_nexthop"] = match.group("bgp_next_hop")
                 continue
 
             # Grab IGP table
@@ -399,19 +389,28 @@ class BirdClient:
                 line,
             )
             if match:
-                res["igp_table"] = match.group("igp_table")
+                protocol["igp_table"] = match.group("igp_table")
                 continue
 
         return res
 
-    def show_route_table(  # noqa: CFQ001  # pylint: disable=R0914,R0912,R0915
-        self, table: str, data: Optional[List[str]] = None
-    ) -> Dict[Any, Any]:
+    def show_route_table(self, table: str, data: Optional[List[str]] = None) -> Dict[Any, Any]:  # pylint: disable=R0914,R0912,R0915
         """Return parsed BIRD routing table."""
 
         # Grab routes
+        return self.show_route(args=["table", table, "all"], data=data)
+
+    def show_route(  # noqa: CFQ001  # pylint: disable=R0914,R0912,R0915
+        self, args: Optional[List[str]] = None, data: Optional[List[str]] = None
+    ) -> Dict[Any, Any]:
+        """Return parsed BIRD routes."""
+
+        # Grab routes
         if not data:  # pragma: no cover
-            data = self.query(f"show route table {table} all")
+            query = ["show", "route"]
+            if args:
+                query.extend(args)
+            data = self.query(query)
 
         res: Dict[str, Any] = {}
 
@@ -900,7 +899,7 @@ class BirdClient:
 
         return res
 
-    def query(self, query: str) -> List[str]:  # pragma: no cover
+    def query(self, query: Union[str, List[str]]) -> List[str]:  # pragma: no cover
         """Open a socket to the BIRD daemon, send the query and get the response."""
 
         # Make sure socket file is set and it exists else throw a client error
@@ -914,6 +913,10 @@ class BirdClient:
 
         # Connect to the BIRD daemon
         sock.connect(self._control_socket)
+
+        # Build query
+        if isinstance(query, list):
+            query = " ".join(query)
 
         # Send the query
         sock.send(f"{query}\n".encode("UTF-8"))
