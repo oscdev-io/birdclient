@@ -35,7 +35,7 @@ class TestBirdClientShowProtocols(BirdClientTestBaseCase):
         """Test show_protocols."""
 
         birdclient = BirdClient()
-        result = birdclient.show_protocols(self.load_test_data(testpath, "test_show_protocols.txt"))
+        result = birdclient.show_protocols(data=self.load_test_data(testpath, "test_show_protocols.txt"))
 
         correct_result = {
             "bgp6_AS65000_as65000b": {

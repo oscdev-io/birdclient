@@ -23,7 +23,7 @@
 
 """Exceptions for birdclient."""
 
-__all__ = ["BirdClientError", "BirdClientParseError"]
+__all__ = ["BirdClientError", "BirdClientParseError", "BirdClientNotFoundError"]
 
 
 class BirdClientError(RuntimeError):
@@ -32,3 +32,7 @@ class BirdClientError(RuntimeError):
 
 class BirdClientParseError(BirdClientError):
     """Exception for parsing errors."""
+
+
+class BirdClientNotFoundError(BirdClientError):
+    """Exception for not found."""

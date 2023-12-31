@@ -35,7 +35,7 @@ class TestBirdClientShowProtocolsDown(BirdClientTestBaseCase):
         """Test show protocol for IPv4 when down."""
 
         birdclient = BirdClient()
-        result = birdclient.show_protocols(self.load_test_data(testpath, "test_show_protocols_down.txt"))
+        result = birdclient.show_protocols(data=self.load_test_data(testpath, "test_show_protocols_down.txt"))
 
         correct_result = {
             "bgp4_AS65000_as65000b": {

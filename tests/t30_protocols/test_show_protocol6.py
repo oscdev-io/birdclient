@@ -35,7 +35,7 @@ class TestBirdClientShowProtocol6(BirdClientTestBaseCase):
         """Test show protocol for IPv6."""
 
         birdclient = BirdClient()
-        result = birdclient.show_protocol("bgp4_AS65000_as65000", self.load_test_data(testpath, "test_show_protocol6.txt"))
+        result = birdclient.show_protocol("bgp6_AS65000_as65000", self.load_test_data(testpath, "test_show_protocol6.txt"))
 
         correct_result = {
             "bgp_nexthop": "fc20::2",
@@ -46,11 +46,13 @@ class TestBirdClientShowProtocol6(BirdClientTestBaseCase):
             "info": "established",
             "input_filter": "f_bgp_AS65000_as65000_peer_import",
             "local_as": 65001,
+            "name": "bgp6_AS65000_as65000",
             "neighbor_address": "fc20::1",
             "neighbor_as": 65000,
             "neighbor_id": "100.64.20.1",
             "output_filter": "f_bgp_AS65000_as65000_peer_export",
             "preference": 100,
+            "proto": "BGP",
             "since": "2023-12-04 22:25:39",
             "source_address": "fc20::2",
             "routes_exported": 5,
