@@ -139,7 +139,6 @@ class BirdClient:
         """Return parsed BIRD protocol."""
 
         res = self.show_protocols(args=[protocol], data=data)
-        print(f"RES: {res}")
         if protocol not in res:
             raise BirdClientNotFoundError(f"Protocol '{protocol}' not found")
 
