@@ -1,7 +1,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Copyright (C) 2019-2023, AllWorldIT.
+# Copyright (C) 2019-2024, AllWorldIT.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -139,7 +139,6 @@ class BirdClient:
         """Return parsed BIRD protocol."""
 
         res = self.show_protocols(args=[protocol], data=data)
-        print(f"RES: {res}")
         if protocol not in res:
             raise BirdClientNotFoundError(f"Protocol '{protocol}' not found")
 
