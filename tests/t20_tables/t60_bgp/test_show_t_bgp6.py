@@ -96,7 +96,7 @@ class TestBirdClientShowTBGP6(BirdClientTestBaseCase):
                             (1, 1),
                             (1, 2),
                         ],
-                        "BGP.ext_community": [("rt", 1, 1), ("ro", 2, 2)],
+                        "BGP.ext_community": [("generic", "0x43000000", "0x1"), ("rt", 1, 1), ("ro", 2, 2)],
                         "BGP.large_community": [(65000, 3, 1)],
                         "BGP.local_pref": 930,
                         "BGP.next_hop": ["fc20::1"],

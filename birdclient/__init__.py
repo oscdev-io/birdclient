@@ -23,6 +23,8 @@
 
 """BIRD client class."""
 
+# pylint: disable=too-many-lines
+
 import os
 import re
 import socket
@@ -420,7 +422,7 @@ class BirdClient:
         prefix: str = ""
         attrib: str = ""
         value: Any
-        for line in data:
+        for line in data:  # pylint: disable=too-many-nested-blocks
             match = re.match(r"^(?P<code>[0-9]{4})-?\s*(?P<line>.*)$", line)
             if match:
                 code = match.group("code")
@@ -450,6 +452,38 @@ class BirdClient:
                     continue
 
                 #
+                # Match IPv4 ROA prefix
+                #
+                match = re.match(
+                    r"^\s*(?P<prefix>[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2})(?P<line>-.+)$",
+                    line,
+                )
+                if match:
+                    # If we had sources from a previous route, save them
+                    if sources:
+                        res[prefix] = sources
+                    sources = []
+                    source = {}
+                    prefix = match.group("prefix")
+                    line = match.group("line")
+
+                #
+                # Match IPv6 ROA prefix
+                #
+                match = re.match(
+                    r"^\s*(?P<prefix>[a-f0-9:]+\/[0-9]{1,3})(?P<line>-.+)$",
+                    line,
+                )
+                if match:
+                    # If we had sources from a previous route, save them
+                    if sources:
+                        res[prefix] = sources
+                    sources = []
+                    source = {}
+                    prefix = match.group("prefix")
+                    line = match.group("line")
+
+                #
                 # Match IPv4 prefix
                 #
                 match = re.match(
@@ -477,6 +511,34 @@ class BirdClient:
                     source = {}
                     prefix = match.group("prefix")
                     line = match.group("line")
+
+                #
+                # Grab a ROA route table entry
+                #
+                match = re.match(
+                    r"^\-(?P<max>[0-9]+)\s+AS(?P<asn>[0-9]+)"
+                    r"\s+\[(?P<protocol>\S+) " + _SINCE_MATCH + r"\] "
+                    r"(?:(?P<bestpath>\*) )?"
+                    r"\((?P<pref>\d+)\)$",
+                    line,
+                )
+                if match:
+                    source = {
+                        "ROA.max": int(match.group("max")),
+                        "ROA.asn": match.group("asn"),
+                        "protocol": match.group("protocol"),
+                        "since": match.group("since"),
+                        "pref": int(match.group("pref")),
+                    }
+                    # Check if we have a bestpath
+                    bestpath = match.group("bestpath")
+                    if bestpath:
+                        source["bestpath"] = True
+                    else:
+                        source["bestpath"] = False
+                    # Add source
+                    sources.append(source)
+                    continue
 
                 #
                 # Grab a "normal" route
@@ -756,7 +818,7 @@ class BirdClient:
                     # Finally if we do, grab the value
                     value = match.group("value")
                 else:
-                    match = re.match(r"^\s*(?P<attrib>[A-Za-z0-9\._]+): (?P<value>.*)$", line)
+                    match = re.match(r"^\s*(?P<attrib>[A-Za-z0-9\._]+): ?(?P<value>.*)$", line)
                     if not match:
                         raise BirdClientParseError(f"Failed to parse code 1012: {line}")
                     attrib = match.group("attrib")
@@ -773,10 +835,14 @@ class BirdClient:
                     value = [int(x) for x in match_all]
                 # Special case for BGP.ext_community
                 elif attrib == "BGP.ext_community":
-                    match_all = re.findall(r"\((?P<c1>(?:ro|rt)),\s*(?P<c2>\d+),\s*(?P<c3>\d+)\)\s*", value)
+                    match_all = re.findall(r"\((?P<c1>(?:ro|rt|generic)),\s*(?P<c2>(?:0x)?\d+),\s*(?P<c3>(?:0x)?\d+)\)\s*", value)
                     value = []
                     if match_all:
-                        value.extend([(x[0], int(x[1]), int(x[2])) for x in match_all])
+                        for x in match_all:
+                            if x[0] in ["ro", "rt"]:
+                                value.append((x[0], int(x[1]), int(x[2])))
+                            else:
+                                value.append((x[0], x[1], x[2]))
                 # Special case for BGP.large_community
                 elif attrib == "BGP.community":
                     match_all = re.findall(r"\((?P<c1>\d+),\s*(?P<c2>\d+)\)\s*", value)
