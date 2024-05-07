@@ -1,0 +1,5 @@
+0001 BIRD 2.15.1 ready.
+1007-Table t_roa6:
+ fc00:101::/48-48 AS65001  [rpki6 2024-04-30 04:51:38] * (200)
+1008-   Type: static univ
+0000 

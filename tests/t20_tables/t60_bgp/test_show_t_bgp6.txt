@@ -13,7 +13,7 @@
  	via fe80::20:1ff:fe02:1 on eth0 weight 1
 1008-	Type: BGP univ
 1012-	BGP.origin: IGP
- 	BGP.as_path: 
+ 	BGP.as_path:
  	BGP.next_hop: fc50::5
  	BGP.local_pref: 940
  	BGP.originator_id: 100.64.10.2
@@ -28,7 +28,7 @@
  	BGP.local_pref: 930
  	BGP.originator_id: 100.64.20.1
  	BGP.cluster_list: 0.0.0.1
- 	BGP.ext_community: (rt, 1, 1) (ro, 2, 2)
+ 	BGP.ext_community: (generic, 0x43000000, 0x1) (rt, 1, 1) (ro, 2, 2)
  	BGP.community: (1,0) (1,1) (1,2)
  	BGP.large_community: (65000, 3, 1)
 1007-                     unicast [bgp_AS65000_rr2_peer6 2019-09-30 17:14:14 from fc20::3] (100) [AS65006i]
@@ -41,5 +41,5 @@
  	BGP.local_pref: 450
  	BGP.originator_id: 100.64.10.1
  	BGP.cluster_list: 0.0.0.1
- 	BGP.large_community: 
-0000 
+ 	BGP.large_community:
+0000
