@@ -23,6 +23,8 @@
 
 """BIRD client class."""
 
+# pylint: disable=too-many-lines
+
 import os
 import re
 import socket
@@ -420,7 +422,7 @@ class BirdClient:
         prefix: str = ""
         attrib: str = ""
         value: Any
-        for line in data:
+        for line in data:  # pylint: disable=too-many-nested-blocks
             match = re.match(r"^(?P<code>[0-9]{4})-?\s*(?P<line>.*)$", line)
             if match:
                 code = match.group("code")

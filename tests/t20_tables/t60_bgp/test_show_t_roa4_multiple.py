@@ -35,7 +35,7 @@ class TestBirdClientShowTROA4Multiple(BirdClientTestBaseCase):
         """Test show t_roa4 table."""
 
         birdclient = BirdClient()
-        result = birdclient.show_route_table("t_roa4", self.load_test_data(testpath, "test_show_t_roa4-multiple.txt"))
+        result = birdclient.show_route_table("t_roa4", self.load_test_data(testpath, "test_show_t_roa4_multiple.txt"))
 
         correct_result = {
             "100.64.101.0/24": [

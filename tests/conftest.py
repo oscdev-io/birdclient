@@ -65,7 +65,7 @@ class CustomPytestRegex:
         return self._regex.pattern
 
 
-@pytest.fixture()
+@pytest.fixture
 def helpers():
     """Return our helpers."""
     return Helpers
