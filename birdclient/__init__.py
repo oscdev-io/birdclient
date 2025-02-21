@@ -841,14 +841,30 @@ class BirdClient:
                     value = [int(x) for x in match_all]
                 # Special case for BGP.ext_community
                 elif attrib == "BGP.ext_community":
-                    match_all = re.findall(r"\((?P<c1>(?:ro|rt|generic)),\s*(?P<c2>(?:0x)?\d+),\s*(?P<c3>(?:0x)?\d+)\)\s*", value)
+                    match_all = re.findall(
+                        r"\((?:unknown )?(?P<c1>(?:ro|rt|generic|(?:0x)?\d+)),\s*(?P<c2>(?:0x)?\d+),\s*(?P<c3>(?:0x)?\d+)\)\s*",
+                        value,
+                    )
                     value = []
                     if match_all:
                         for x in match_all:
                             if x[0] in ["ro", "rt"]:
                                 value.append((x[0], int(x[1]), int(x[2])))
                             else:
-                                value.append((x[0], x[1], x[2]))
+                                # Check if we can convert any of the community values to integers
+                                try:
+                                    x0 = int(x[0])
+                                except ValueError:
+                                    x0 = x[0]
+                                try:
+                                    x1 = int(x[1])
+                                except ValueError:
+                                    x1 = x[1]
+                                try:
+                                    x2 = int(x[2])
+                                except ValueError:
+                                    x2 = x[2]
+                                value.append((x0, x1, x2))
                 # Special case for BGP.large_community
                 elif attrib == "BGP.community":
                     match_all = re.findall(r"\((?P<c1>\d+),\s*(?P<c2>\d+)\)\s*", value)
