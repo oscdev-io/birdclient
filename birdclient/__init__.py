@@ -802,9 +802,15 @@ class BirdClient:
                 match = re.match(r"^\s*Type: (?P<route_type>.+)$", line)
                 if match:
                     source["type"] = match.group("route_type").split()
-                else:
-                    raise BirdClientParseError(f"Failed to parse type: {line}")
-                continue
+                    continue
+
+                # NK: Match "Internal route handling values: 0L 10G 0S id 1" attribute in 3.0.0
+                match = re.match(r"^\s*Internal route handling values: (?P<value>.+)$", line)
+                if match:
+                    # NK: ignore for now
+                    continue
+
+                raise BirdClientParseError(f"Failed to parse type: {line}")
 
             # Pull off route attributes
             if code == "1012":
@@ -940,6 +946,13 @@ class BirdClient:
                 # NK: Bird quirk with 2.0.11, this is supposed to be hidden
                 elif attrib == "RIP.02":
                     continue
+                # NK: "preference:" attribute introduced in 3.0.0
+                elif attrib == "preference":
+                    value = int(value)
+                # NK: "source:" attribute introduced in 3.0.0
+                elif attrib == "source":
+                    # Normal string value
+                    pass
                 # Finally if we don't understand the attribute
                 else:
                     raise BirdClientParseError(f"Failed to parse code 1012 attribute '{attrib}: {line}")
