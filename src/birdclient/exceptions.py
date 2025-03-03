@@ -1,7 +1,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Copyright (C) 2019-2024, AllWorldIT.
+# Copyright (C) 2019-2025, AllWorldIT.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -23,7 +23,7 @@
 
 """Exceptions for birdclient."""
 
-__all__ = ["BirdClientError", "BirdClientParseError", "BirdClientNotFoundError"]
+__all__ = ["BirdClientError", "BirdClientNotFoundError", "BirdClientParseError"]
 
 
 class BirdClientError(RuntimeError):

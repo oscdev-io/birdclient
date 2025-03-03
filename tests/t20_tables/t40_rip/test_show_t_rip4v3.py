@@ -25,30 +25,41 @@ from birdclient import BirdClient
 
 from ...basetests import BirdClientTestBaseCase
 
-__all__ = ["TestBirdClientShowTROA6"]
+__all__ = ["TestBirdClientShowTRIP4v3"]
 
 
-class TestBirdClientShowTROA6(BirdClientTestBaseCase):
+class TestBirdClientShowTRIP4v3(BirdClientTestBaseCase):
     """Test the BirdClient class."""
 
-    def test_show_t_roa6(self, testpath: str) -> None:
-        """Test show t_roa6 table."""
+    def test_show_t_rip4(self, testpath: str) -> None:
+        """Test show RIP4 table."""
 
         birdclient = BirdClient()
-        result = birdclient.show_route_table("t_roa6", self.load_test_data(testpath, "test_show_t_roa6.txt"))
+        result = birdclient.show_route_table("t_rip4", self.load_test_data(testpath, "test_show_t_rip4v3.txt"))
 
         correct_result = {
-            "fc00:101::/48": [
+            "10.0.0.0/24": [
                 {
-                    "ROA.asn": "65001",
-                    "ROA.max": 48,
+                    "attributes": {
+                        "preference": 120,
+                        "rip_metric": 3,
+                        "rip_tag": "0000",
+                        "source": "RIP",
+                    },
                     "bestpath": True,
-                    "pref": 200,
-                    "protocol": "rpki6",
-                    "since": "2024-04-30 04:51:38",
-                    "type": ["static", "univ"],
-                }
-            ]
+                    "metric1": 3,
+                    "nexthops": [
+                        {
+                            "gateway": "100.64.0.1",
+                            "interface": "eth0",
+                        },
+                    ],
+                    "pref": 120,
+                    "prefix_type": "unicast",
+                    "protocol": "rip4",
+                    "since": "2025-02-21 08:49:00",
+                },
+            ],
         }
 
         assert result == correct_result, "The show_route_table() result does not match what it should be"

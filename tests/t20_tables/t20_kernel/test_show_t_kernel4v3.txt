@@ -1,0 +1,50 @@
+0001 BIRD 3.0.1 ready.
+1007-Table t_kernel4:
+ 0.0.0.0/0            unicast [static4 2025-02-21 09:21:04] * (200)
+  via 100.201.0.2 on eth2
+1012-     preference: 200
+  source: static
+1008-     Internal route handling values: 0L 12G 0S id 1
+1007-                     unicast [kernel4 2025-02-21 09:21:24] (10)
+  via 100.201.0.3 on eth2
+1012-     preference: 10
+  source: inherit
+  krt_source: 3
+  krt_metric: 0
+1008-     Internal route handling values: 0L 6G 1S id 7
+1007-100.131.0.0/24       unicast [static4 2025-02-21 09:21:04] * (200)
+  via 100.201.0.2 on eth2
+1012-     preference: 200
+  source: static
+1008-     Internal route handling values: 0L 12G 0S id 2
+1007-100.132.0.0/24       unicast [static4 2025-02-21 09:21:04] * (200)
+  dev eth2
+1012-     preference: 200
+  source: static
+1008-     Internal route handling values: 0L 12G 0S id 3
+1007-100.133.0.0/24       blackhole [static4 2025-02-21 09:21:04] * (200)
+1012-     preference: 200
+  source: static
+1008-     Internal route handling values: 0L 12G 0S id 4
+1007-100.121.0.0/24       unicast [kernel4 2025-02-21 09:21:24] * (10)
+  via 100.201.0.3 on eth2
+1012-     preference: 10
+  source: inherit
+  krt_source: 3
+  krt_metric: 0
+1008-     Internal route handling values: 0L 6G 1S id 5
+1007-100.122.0.0/24       unicast [kernel4 2025-02-21 09:21:24] * (10)
+  dev eth2
+1012-     preference: 10
+  source: inherit
+  krt_scope: 253
+  krt_source: 3
+  krt_metric: 0
+1008-     Internal route handling values: 0L 6G 1S id 6
+1007-100.123.0.0/31       blackhole [kernel4 2025-02-21 09:21:24] * (10)
+1012-     preference: 10
+  source: inherit
+  krt_source: 3
+  krt_metric: 0
+1008-     Internal route handling values: 0L 6G 1S id 8
+0000

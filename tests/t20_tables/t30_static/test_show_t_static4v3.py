@@ -25,51 +25,37 @@ from birdclient import BirdClient
 
 from ...basetests import BirdClientTestBaseCase
 
-__all__ = ["TestBirdClientShowTKernel4"]
+__all__ = ["TestBirdClientShowTStatic4v3"]
 
 
-class TestBirdClientShowTKernel4(BirdClientTestBaseCase):
+class TestBirdClientShowTStatic4v3(BirdClientTestBaseCase):
     """Test the BirdClient class."""
 
-    def test_show_t_kernel4(self, testpath: str) -> None:
-        """Test show kernel4 table."""
+    def test_show_t_static4v3(self, testpath: str) -> None:
+        """Test show static4 table."""
 
         birdclient = BirdClient()
-        result = birdclient.show_route_table("t_kernel4", self.load_test_data(testpath, "test_show_t_kernel4.txt"))
+        result = birdclient.show_route_table("t_static4", self.load_test_data(testpath, "test_show_t_static4v3.txt"))
 
         correct_result = {
             "10.0.1.0/24": [
                 {
+                    "attributes": {
+                        "preference": 200,
+                        "source": "static",
+                    },
                     "bestpath": True,
-                    "nexthops": [{"gateway": "192.168.0.4", "interface": "eth0"}],
+                    "nexthops": [
+                        {
+                            "gateway": "192.168.0.4",
+                            "interface": "eth1",
+                        },
+                    ],
                     "pref": 200,
                     "prefix_type": "unicast",
                     "protocol": "static4",
-                    "since": "2019-09-01 13:36:14",
-                    "type": ["static", "univ"],
-                }
-            ],
-            "10.0.2.0/24": [
-                {
-                    "bestpath": True,
-                    "nexthops": [{"gateway": "192.168.0.5", "interface": "eth0"}],
-                    "pref": 200,
-                    "prefix_type": "unicast",
-                    "protocol": "static4",
-                    "since": "2019-09-01 13:36:14",
-                    "type": ["static", "univ"],
-                }
-            ],
-            "172.16.100.0/24": [
-                {
-                    "bestpath": False,
-                    "nexthops": [{"gateway": "172.16.10.10", "interface": "eth9"}],
-                    "pref": 10,
-                    "prefix_type": "unicast",
-                    "protocol": "kernel4",
-                    "since": "2019-09-01 13:36:14",
-                    "type": ["inherit", "univ"],
-                }
+                    "since": "2025-02-21 07:30:51",
+                },
             ],
         }
 

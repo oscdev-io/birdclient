@@ -1,0 +1,16 @@
+0001 BIRD 3.0.1 ready.
+1007-Table t_bgp4_AS65000_e1_peer:
+ 100.64.101.0/24      unicast [bgp4_AS65000_e1 2025-02-22 08:23:11] * (100) [i]
+  via 100.64.0.2 on eth0
+1012-     hostentry: via 100.64.0.2 table master4
+  preference: 100
+  igp_metric: 0
+  from: 100.64.0.2
+  source: BGP
+  bgp_origin: IGP
+  bgp_path:
+  bgp_next_hop: 100.64.0.2
+  bgp_local_pref: 100
+  bgp_large_community: (65000, 3, 1)
+1008-     Internal route handling values: 0L 20G 0S id 1
+0000

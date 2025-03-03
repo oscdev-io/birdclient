@@ -1,0 +1,19 @@
+0001 BIRD 3.0.1 ready.
+1007-Table t_ospf4:
+ 100.64.0.0/24        unicast [ospf4 2025-02-21 18:10:11] * I (150/10) [0.0.0.2]
+  dev eth0
+1012-     preference: 150
+  source: OSPF
+  ospf_metric1: 10
+  ospf_router_id: 0.0.0.2
+1008-     Internal route handling values: 0L 12G 0S id 1
+1007-10.0.0.0/24          unicast [ospf4 2025-02-21 18:10:17] * E2 (150/10/10000) [0.0.0.1]
+  via 100.64.0.1 on eth0
+1012-     preference: 150
+  source: OSPF-E2
+  ospf_metric1: 10
+  ospf_metric2: 10000
+  ospf_tag: 0x00000000
+  ospf_router_id: 0.0.0.1
+1008-     Internal route handling values: 0L 12G 0S id 2
+0000

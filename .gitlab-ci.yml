@@ -1,163 +1,126 @@
 image: idmslinux/rolling
 
-include:
-  - template: 'Workflows/MergeRequest-Pipelines.gitlab-ci.yml'
-
+# Run a merge request pipeline only for merge requests, or for branches when there is no merge request
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
 
 # Stages we need to progress through
 stages:
+  - validate
   - test
+  - test_build
   - prepare_release
   - release
-#  - pages
-#  - release_pypi
+
+
+# Run for merge requests and non-protected branches
+.rules_for_mrs_tempalate: &rules_for_mrs
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_REF_PROTECTED == "true"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH'
+
+
+commitlint:
+  stage: validate
+  image: registry.conarx.tech/containers/commitlint
+  script:
+    - cd "$CI_PROJECT_DIR"
+    - echo "CI_COMMIT_BEFORE_SHA -> $CI_COMMIT_BEFORE_SHA"
+    - |
+      if [ "$CI_COMMIT_BEFORE_SHA" == "0000000000000000000000000000000000000000" ]; then
+        START_COMMIT=HEAD^
+      else
+        START_COMMIT=$CI_MERGE_REQUEST_DIFF_BASE_SHA
+      fi
+    - run-commitlint --from "$START_COMMIT" --to HEAD
+  <<: *rules_for_mrs
+
+
+shellcheck:
+  stage: validate
+  image: registry.conarx.tech/containers/shellcheck
+  script:
+    - cd "$CI_PROJECT_DIR"
+    - run-shellcheck .
+  <<: *rules_for_mrs
 
 
 test_job:
   stage: test
   coverage: '/^TOTAL.+?(\d+\%)$/'
   script:
+  # Create environment
   - pacman -Syu --noconfirm
-  - pacman -S --noconfirm grep python git
-  - pacman -S --noconfirm python-tox
-  # Set tox work directory
-  - export TOX_WORK_DIR=$(dirname "$PWD")/tox
+      grep
+      git
+      python-pytest-cov
+      python-tox
   # Run tests
+  - export TOX_WORK_DIR=$(dirname "$PWD")/birdclient.tox
   - tox
-  # Run build test
+
+
+buildtest_job:
+  stage: test_build
+  script:
+  - pacman -Syu --noconfirm
+      grep
+      git
+      python-tox
+  # Set tox work directory
+  - export TOX_WORK_DIR=$(dirname "$PWD")/birdclient.tox
+  # Run tests
   - tox -e build
-#  - tox -e docs
-  # List build artifacts
-  - echo "= = = = = BUILD ARTIFACTS = = = = ="
-  - find dist -name "*.tar.*" -o -name "*.zip" -o -name "*.whl"
+
+
+buildtest_flit_job:
+  stage: test_build
+  script:
+  - pacman -Syu --noconfirm
+      grep
+      git
+      python-tox
+  # Set tox work directory
+  - export TOX_WORK_DIR=$(dirname "$PWD")/birdclient.tox
+  # Run tests
+  - tox -e build_flit
 
 
 prepare_release:
   stage: prepare_release
-#  rules:
-#    - if: $CI_COMMIT_TAG
+  rules:
+    - if: $CI_COMMIT_TAG
   script:
   - pacman -Syu --noconfirm
-  - pacman -S --noconfirm grep python git
-  - pacman -S --noconfirm python-tox
-  # Set tox work directory
-  - export TOX_WORK_DIR=$(dirname "$PWD")/tox
-  # Build docs and packages
-  - tox -e build
-#  - tox -e docs
-  - mkdir -p build
-#  - mv docs/build/html build/docs
-  # Build compressed files and checksums
-  - cd dist
-  - |
-    find . -name "*.tar.*" -o -name "*.zip" -o -name "*.whl" | sort | xargs sha512sum > SHA512SUMS.txt
-    find . -name "*.tar.*" -o -name "*.zip" -o -name "*.whl" | sort | xargs b2sum > B2SUMS.txt
-  - cd ..
+      git
+  - mkdir build
   # Work out commit range for changelog
   - LAST_TAG=$(git tag --sort -version:refname | head -n2 | tail -n1)
   - if [ -n "$LAST_TAG" ]; then COMMIT_RANGE="$LAST_TAG..$CI_COMMIT_TAG"; else COMMIT_RANGE=""; fi
   # Output description file
   - echo "Automatic release based on tag $CI_COMMIT_TAG" > build/description.txt
-  # Check if we can add the changelog
-  - CHANGELOG=$(git log --oneline --decorate --no-merges $COMMIT_RANGE)
-  - |
-    if [ -n "$CHANGELOG" ]; then
-      echo "# Changelog" >> build/description.txt
-      echo '```' >> build/description.txt
-      echo "$CHANGELOG" >> build/description.txt
-      echo '```' >> build/description.txt
-    fi
+  - git log --oneline --decorate --no-merges $COMMIT_RANGE >> build/description.txt
   artifacts:
     expire_in: 1 day
     paths:
     - build/
-    - dist/
 
-
-release_gitlab:
+release:
   stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
   rules:
-  - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_TAG
   script:
-  - pacman -Syu --noconfirm
-  - pacman -S --noconfirm
-      curl
-      release-cli
-  # Work out variables
-  - PACKAGE_VERSION=$(echo "$CI_COMMIT_TAG" | sed -e 's/^v//')
-  - PACKAGE_REGISTRY_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/releases/${PACKAGE_VERSION}"
-  # Grab description
-  - DESCRIPTION=$(cat build/description.txt)
-  # Build asset JSON
-  - cd dist
-  - assets=()
-  - |
-    for p in $(find . -name "*.tar.*" -o -name "*.zip" -o -name "*.whl" -o -name "*SUMS.txt" | sort); do
-      fn=$(basename "$p")
-      assets+=("--assets-link={\"name\":\"${fn}\",\"url\":\"${PACKAGE_REGISTRY_URL}/${fn}\"}")
-    done
-  - echo -e "ASSETS:\n${assets[@]}"
-  # Upload assets
-  - |
-    for p in $(find . -name "*.tar.*" -o -name "*.zip" -o -name "*.whl" -o -name "*SUMS.txt" | sort); do
-      fn=$(basename "$p")
-      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file "${fn}" "${PACKAGE_REGISTRY_URL}/${fn}"
-    done
-  # Release
-  - release-cli create --name "Release $CI_COMMIT_TAG" --tag-name "$CI_COMMIT_TAG" --description "$DESCRIPTION" "${assets[@]}"
-
-
-release_gitlab_package:
-  stage: release
-  rules:
-  - if: $CI_COMMIT_TAG
-  script:
-  - pacman -Syu --noconfirm
-  - pacman -S --noconfirm
-      python-tox
-  # Set tox work directory
-  - export TOX_WORK_DIR=$(dirname "$PWD")/tox
-  # Publish to gitlab
-  - |
-    export TWINE_USERNAME=gitlab-ci-token
-    export TWINE_PASSWORD=${CI_JOB_TOKEN}
-    export PUBLISH_REPOSITORY=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi
-    tox -e publish
-
-
-#release_pypi:
-#  stage: release_pypi
-#  rules:
-#  - if: $CI_COMMIT_TAG
-#  script:
-#  - pacman -Syu --noconfirm
-#  - pacman -S --noconfirm
-#        python-tox
-#  # Set tox work directory
-#  - export TOX_WORK_DIR=$(dirname "$PWD")/tox
-#  # Publish to gitlab pypi
-#  - |
-#    if [ -n "$PYPI_USERNAME" -a -n "$PYPI_TOKEN" ]; then
-#      echo "Publishing to pypi..."
-#      export TWINE_USERNAME=${PYPI_USERNAME}
-#      export TWINE_PASSWORD=${PYPI_TOKEN}
-#      tox -e publish
-#    else
-#      echo "NOT Publishing to pypi: No PYPI_USERNAME or PYPI_TOKEN"
-#    fi
-
-
-#pages:
-#  stage: pages
-#  rules:
-#  - if: $CI_COMMIT_TAG
-#  script:
-#  # Create environment
-#  - pacman -Syu --noconfirm
-#  # Move documentation to public/
-#  # This is the only supported path in gitlab
-#  - mv build/docs public
-#  artifacts:
-#    paths:
-#    - public/
+    - echo "Release"
+  release:
+     name: 'Release $CI_COMMIT_TAG'
+     description: 'Automatic release based on tag $CI_COMMIT_TAG'
+     tag_name: '$CI_COMMIT_TAG'
+     ref: '$CI_COMMIT_TAG'
 

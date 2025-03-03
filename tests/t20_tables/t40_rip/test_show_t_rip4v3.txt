@@ -1,0 +1,10 @@
+0001 BIRD 3.0.1 ready.
+1007-Table t_rip4:
+ 10.0.0.0/24          unicast [rip4 2025-02-21 08:49:00] * (120/3)
+  via 100.64.0.1 on eth0
+1012-     preference: 120
+  source: RIP
+  rip_metric: 3
+  rip_tag: 0000
+1008-     Internal route handling values: 0L 12G 0S id 1
+0000
