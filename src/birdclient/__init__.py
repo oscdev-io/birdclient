@@ -23,17 +23,15 @@
 
 """BIRD client class."""
 
-# pylint: disable=too-many-lines
-
-import os
+import pathlib
 import re
 import socket
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from .exceptions import BirdClientError, BirdClientNotFoundError, BirdClientParseError
 from .version import __version__
 
-__all__ = ["__version__", "BirdClient", "BirdClientError", "BirdClientParseError", "BirdClientNotFoundError"]
+__all__ = ["BirdClient", "BirdClientError", "BirdClientNotFoundError", "BirdClientParseError", "__version__"]
 
 
 # Regex matches
@@ -46,11 +44,11 @@ class BirdClient:
     # Debug flag
     _debug: bool
     # Socket file
-    _control_socket: Optional[str]
+    _control_socket: str | None
     # Ending lines for bird control channel
-    _ending_lines: List[bytes]
+    _ending_lines: list[bytes]
 
-    def __init__(self, control_socket: Optional[str] = None, debug: bool = False):
+    def __init__(self, control_socket: str | None = None, debug: bool = False) -> None:  # noqa: FBT001,FBT002
         """Initialize the object."""
 
         # Set debug flag
@@ -60,7 +58,8 @@ class BirdClient:
         self._control_socket = control_socket
         if not self._control_socket:  # pragma: no cover
             for bird_socket_file in ["/run/bird.ctl", "/run/bird/bird.ctl"]:
-                if os.path.exists(bird_socket_file):
+                bird_socket_file_path = pathlib.Path(bird_socket_file)
+                if bird_socket_file_path.exists():
                     self._control_socket = bird_socket_file
                     break
 
@@ -96,7 +95,7 @@ class BirdClient:
             b"9001 ",
         ]
 
-    def show_status(self, data: Optional[List[str]] = None) -> Dict[str, str]:
+    def show_status(self, data: list[str] | None = None) -> dict[str, str]:
         """Return parsed BIRD status."""
 
         # Grab status
@@ -137,7 +136,7 @@ class BirdClient:
 
         return res
 
-    def show_protocol(self, protocol: str, data: Optional[List[str]] = None) -> Dict[str, Any]:  # pylint: disable=too-many-branches
+    def show_protocol(self, protocol: str, data: list[str] | None = None) -> dict[str, Any]:  # pylint: disable=too-many-branches
         """Return parsed BIRD protocol."""
 
         res = self.show_protocols(args=[protocol], data=data)
@@ -146,9 +145,9 @@ class BirdClient:
 
         return res[protocol]
 
-    def show_protocols(  # noqa: CFQ001 # pylint: disable=R0912,R0915
-        self, args: Optional[List[str]] = None, data: Optional[List[str]] = None
-    ) -> Dict[str, Dict[str, Any]]:
+    def show_protocols(  # noqa: C901,PLR0912,PLR0915
+        self, args: list[str] | None = None, data: list[str] | None = None
+    ) -> dict[str, dict[str, Any]]:
         """Return parsed BIRD protocol."""
 
         # Grab protocols
@@ -160,10 +159,9 @@ class BirdClient:
             # Send query to BIRD
             data = self.query(query)
 
-        res: Dict[str, Any] = {}
-
+        res: dict[str, Any] = {}
         # Loop with data to grab information we need
-        protocol: Dict[str, Any] = {}
+        protocol: dict[str, Any] = {}
         for line in data:
             # Grab summary
             match = re.match(
@@ -204,11 +202,10 @@ class BirdClient:
                     if info == "alone":
                         state = "down"
                 # Else add the extra info onto info for all other protocols
-                else:
-                    # If we have extra info then add it onto info and blank it
-                    if info_extra:
-                        info += f" {info_extra}"
-                        info_extra = ""
+                # If we have extra info then add it onto info and blank it
+                elif info_extra:
+                    info += f" {info_extra}"
+                    info_extra = ""
 
                 protocol_name = match.group("name")
 
@@ -395,15 +392,15 @@ class BirdClient:
 
         return res
 
-    def show_route_table(self, table: str, data: Optional[List[str]] = None) -> Dict[Any, Any]:  # pylint: disable=R0914,R0912,R0915
+    def show_route_table(self, table: str, data: list[str] | None = None) -> dict[Any, Any]:  # pylint: disable=R0914,R0912,R0915
         """Return parsed BIRD routing table."""
 
         # Grab routes
         return self.show_route(args=["table", table, "all"], data=data)
 
-    def show_route(  # noqa: CFQ001  # pylint: disable=R0914,R0912,R0915
-        self, args: Optional[List[str]] = None, data: Optional[List[str]] = None
-    ) -> Dict[Any, Any]:
+    def show_route(  # noqa: C901,PLR0912,PLR0915
+        self, args: list[str] | None = None, data: list[str] | None = None
+    ) -> dict[Any, Any]:
         """Return parsed BIRD routes."""
 
         # Grab routes
@@ -413,16 +410,18 @@ class BirdClient:
                 query.extend(args)
             data = self.query(query)
 
-        res: Dict[str, Any] = {}
+        res: dict[str, Any] = {}
 
         # Loop with data to grab information we need
         code = ""
-        sources: List[Dict[str, Any]] = []
-        source: Dict[str, Any] = {}
+        sources: list[dict[str, Any]] = []
+        source: dict[str, Any] = {}
         prefix: str = ""
         attrib: str = ""
         value: Any
-        for line in data:  # pylint: disable=too-many-nested-blocks
+
+        for _line in data:  # pylint: disable=too-many-nested-blocks
+            line = _line
             match = re.match(r"^(?P<code>[0-9]{4})-?\s*(?P<line>.*)$", line)
             if match:
                 code = match.group("code")
@@ -698,7 +697,7 @@ class BirdClient:
                     line,
                 )
                 if match:
-                    nexthop: Dict[str, Any] = {}
+                    nexthop: dict[str, Any] = {}
                     # Grab gateway
                     gateway = match.group("gateway")
                     if gateway:
@@ -834,13 +833,21 @@ class BirdClient:
                 if "attributes" not in source:
                     source["attributes"] = {}
 
-                # Special case for BGP.as_path
-                if attrib == "BGP.as_path":
+                # In bird 3.0.0 the attribute "from" was added
+                if attrib in ("from", "hostentry"):
+                    pass
+
+                # In bird 3.0.0 the attribute "igp_metric" was added
+                elif attrib == "igp_metric":
+                    value = int(value)
+
+                # In bird 3.0.0 the attribute "BGP.as_path" was renamed to "bgp_path"
+                elif attrib in ("BGP.as_path", "bgp_path"):
                     match_all = re.findall(r"(?P<as_path>\d+)\s*", value)
                     # Replace values if we have any
                     value = [int(x) for x in match_all]
-                # Special case for BGP.ext_community
-                elif attrib == "BGP.ext_community":
+                # In bird 3.0.0 the attribute "BGP.ext_community" was renamed to "bgp_ext_community"
+                elif attrib in ("BGP.ext_community", "bgp_ext_community"):
                     match_all = re.findall(
                         r"\((?:unknown )?(?P<c1>(?:ro|rt|generic|(?:0x)?\d+)),\s*(?P<c2>(?:0x)?\d+),\s*(?P<c3>(?:0x)?\d+)\)\s*",
                         value,
@@ -866,48 +873,51 @@ class BirdClient:
                                     x2 = x[2]
                                 value.append((x0, x1, x2))
                 # Special case for BGP.large_community
-                elif attrib == "BGP.community":
+                elif attrib in ("BGP.community", "bgp_community"):
                     match_all = re.findall(r"\((?P<c1>\d+),\s*(?P<c2>\d+)\)\s*", value)
                     value = []
                     if match_all:
                         value.extend([(int(x[0]), int(x[1])) for x in match_all])
-                # Special case for BGP.large_community
-                elif attrib == "BGP.large_community":
+                # In bird 3.0.0 the attribute "BGP.large_community" was renamed to "bgp_large_community"
+                elif attrib in ("BGP.large_community", "bgp_large_community"):
                     match_all = re.findall(r"\((?P<lc1>\d+),\s*(?P<lc2>\d+),\s*(?P<lc3>\d+)\)\s*", value)
                     value = []
                     if match_all:
                         value.extend([(int(x[0]), int(x[1]), int(x[2])) for x in match_all])
                 # Special case for basic integers
-                elif attrib in ("BGP.local_pref", "Kernel.metric", "OSPF.metric1", "OSPF.metric2", "RIP.metric"):
+                elif attrib in ("BGP.local_pref", "bgp_local_pref"):
                     value = int(value)
-                # Special case for BGP.next_hop
-                elif attrib == "BGP.next_hop":
+                # In bird 3.0.0 the attribute "BGP.next_hop" was renamed to "bgp_next_hop"
+                elif attrib in ("BGP.next_hop", "bgp_next_hop"):
                     match_all = re.findall(r"(?P<next_hop>\S+)\s*", value)
                     value = list(match_all)
-                # Special case for BGP.origin
-                elif attrib == "BGP.origin":  # noqa: SIM114
+                # In bird 3.0.0 the attribute "BGP.origin" was renamed to "bgp_origin"
+                elif attrib in ("BGP.origin", "bgp_origin"):  # noqa: SIM114
                     # Normal string
                     pass
-                # Special case for BGP.originator_id
-                elif attrib == "BGP.originator_id":  # noqa: SIM114
+                # In bird 3.0.0 the attribute "BGP.originator_id" was renamed to "bgp_originator_id"
+                elif attrib in ("BGP.originator_id", "bgp_originator_id"):  # noqa: SIM114
                     # Normal string
                     pass
-                # Special case for BGP.cluster_list
-                elif attrib == "BGP.cluster_list":  # noqa: SIM114
+                # In bird 3.0.0 the attribute "BGP.cluster_list" was renamed to "bgp_cluster_list"
+                elif attrib in ("BGP.cluster_list", "bgp_cluster_list"):
                     # Normal string
                     pass
 
-                # Special case for OSPF.router_id
-                elif attrib == "OSPF.router_id":  # noqa: SIM114
+                # NK: In bird 3.0.0 "ospf_metricX" and "ospf_metricX" was added
+                elif attrib in ("OSPF.metric1", "ospf_metric1", "OSPF.metric2", "ospf_metric2"):
+                    value = int(value)
+                # NK: In bird 3.0.0 "OSPF.router_id" was renamed to "ospf_router_id"
+                elif attrib in ("OSPF.router_id", "ospf_router_id"):
                     # Normal string
                     pass
-                # Special case for OSPF.tag
-                elif attrib == "OSPF.tag":
+                # NK: In bird 3.0.0 "OSPF.tag" was renamed to "ospf_tag"
+                elif attrib in ("OSPF.tag", "ospf_tag"):
                     # Tag is hex, so we treat it as a string
                     pass
 
-                # Special case for Kernel.scope
-                elif attrib == "Kernel.scope":
+                # NK: In bird 3.0.0 "Kernel.scope" was renamed to "ktr_scope"
+                elif attrib in ("Kernel.scope", "krt_scope"):
                     # Translate kernel scope based on /etc/iproute2/rt_scopes
                     if value == "0":
                         value = "global"
@@ -921,8 +931,11 @@ class BirdClient:
                         value = "site"
                     else:
                         raise BirdClientParseError(f"Kernel scope '{value}' found and not understood: {line}")
-                # Special case for Kernel.source
-                elif attrib == "Kernel.source":
+                # NK: In bird 3.0.0 "krt_metric" was added
+                elif attrib == "krt_metric":
+                    value = int(value)
+                # NK: In bird 3.0.0 "Kernel.source" was renamed to "krt_source"
+                elif attrib in ("Kernel.source", "krt_source"):
                     # Translate kernel source into value
                     # https://github.com/BIRD/bird/blob/master/nest/route.h#L370
                     if value == "0":
@@ -954,24 +967,27 @@ class BirdClient:
                     elif value == "13":
                         value = "RTS_BABEL"
                     else:
-                        raise BirdClientParseError("Unknown 'Kernel.source' attribute")
-                # Special case for RIP.tag
-                elif attrib == "RIP.tag":
+                        raise BirdClientParseError(f"Kernel source '{value}' found and not understood: {line}")
+                # NK: In bird 3.0.0 "RIP.tag" was renamed to "rip_tag"
+                elif attrib in ("RIP.tag", "rip_tag"):
                     # This is a string (HEX)
                     pass
-                # NK: Bird quirk with 2.0.11, this is supposed to be hidden
-                elif attrib == "RIP.02":
-                    continue
-                # NK: "preference:" attribute introduced in 3.0.0
+                # # NK: Bird quirk with 2.0.11, this is supposed to be hidden
+                # elif attrib == "RIP.02":  # noqa: ERA001
+                #     continue  # noqa: ERA001
+                # NK: "rip_metric" attribute introduced in 3.0.0
+                elif attrib == "rip_metric":  # noqa: SIM114
+                    value = int(value)
+                # NK: "preference" attribute introduced in 3.0.0
                 elif attrib == "preference":
                     value = int(value)
-                # NK: "source:" attribute introduced in 3.0.0
+                # NK: "source" attribute introduced in 3.0.0
                 elif attrib == "source":
                     # Normal string value
                     pass
                 # Finally if we don't understand the attribute
                 else:
-                    raise BirdClientParseError(f"Failed to parse code 1012 attribute '{attrib}: {line}")
+                    raise BirdClientParseError(f"Failed to parse code 1012 attribute '{attrib}': {line}")
 
                 # Check if we have an attribute value already
                 if attrib in source["attributes"]:
@@ -985,7 +1001,7 @@ class BirdClient:
                 continue
 
             # Check for errors
-            if code.startswith("8") or code.startswith("9"):
+            if code.startswith(("8", "9")):
                 raise BirdClientError(f"BIRD client error: {line}")
 
             # If we didn't match the line, we need to raise an exception
@@ -993,13 +1009,14 @@ class BirdClient:
 
         return res
 
-    def query(self, query: Union[str, List[str]]) -> List[str]:  # pragma: no cover
+    def query(self, query: str | list[str]) -> list[str]:  # pragma: no cover
         """Open a socket to the BIRD daemon, send the query and get the response."""
 
         # Make sure socket file is set and it exists else throw a client error
         if not self._control_socket:
             raise BirdClientError("Failed to find BIRD socket file")
-        if not os.path.exists(self._control_socket):
+        control_socket_path = pathlib.Path(self._control_socket)
+        if not control_socket_path.exists():
             raise BirdClientError(f"BIRD socket file '{self._control_socket}' does not exist")
 
         # Create a unix socket
@@ -1013,7 +1030,7 @@ class BirdClient:
             query = " ".join(query)
 
         # Send the query
-        sock.send(f"{query}\n".encode("UTF-8"))
+        sock.send(f"{query}\n".encode())
 
         # Initialize byte array to store what we get back
         data = bytearray()
@@ -1041,7 +1058,7 @@ class BirdClient:
         sock.close()
 
         if self._debug:
-            print(f"Bird Reply:\n{data.decode('UTF-8')}")
+            print(f"Bird Reply:\n{data.decode('UTF-8')}")  # noqa: T201
 
         # Convert data bytes to a string and split into lines
         return data.decode("UTF-8").splitlines()
