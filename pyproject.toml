@@ -45,6 +45,10 @@ packages = [
 ]
 
 
+[tool.setuptools.dynamic]
+version = {attr = "birdclient.version.__version__"}
+
+
 [tool.black]
 line-length = 132
 
